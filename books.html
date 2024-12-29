@@ -377,15 +377,12 @@
             messages.scrollTop = messages.scrollHeight;
         }
 
-        // 会話の表示
-        function showConversation(id) {
-            const conv = conversations.find(c => c.id === id);
-            if (conv) {
-                activeConversation = conv;
-                renderConversationList();
-                updateChatView();
-            }
-        }
+       // メッセージ送信（現在はモック）
+function sendMessage(bookId) {
+    const book = books.find(b => b.id === bookId);
+    // 該当の教科書のメッセージページに遷移
+    window.location.href = `message.html?book=${bookId}`;
+}
 
         // メッセージ送信
         function sendMessage() {
