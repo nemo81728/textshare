@@ -335,5 +335,11 @@
                   '希望教科書：' + formData.wishlist);
         });
     </script>
+    <script>
+    // ページ読み込み時に認証チェック
+    document.addEventListener('DOMContentLoaded', () => {
+        auth.requireAuth();
+    });
+</script>
 </body>
 </html>
