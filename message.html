@@ -21,6 +21,7 @@
             background: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             padding: 1rem;
+            margin-bottom: 2rem;
         }
 
         .header-content {
@@ -39,9 +40,13 @@
         }
 
         .messages-container {
-            max-width: 800px;
-            margin: 2rem auto;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 120px);
         }
 
         .conversation-list {
@@ -49,6 +54,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             overflow: hidden;
+            overflow-y: auto;
         }
 
         .conversation-item {
@@ -65,6 +71,10 @@
             background: #f9fafb;
         }
 
+        .conversation-item.active {
+            background: #ebf5ff;
+        }
+
         .avatar {
             width: 48px;
             height: 48px;
@@ -75,10 +85,12 @@
             justify-content: center;
             font-weight: bold;
             color: #4b5563;
+            flex-shrink: 0;
         }
 
         .conversation-content {
             flex: 1;
+            min-width: 0;
         }
 
         .conversation-header {
@@ -93,61 +105,75 @@
         }
 
         .timestamp {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: #6b7280;
-        }
-
-        .book-title {
-            font-size: 0.875rem;
-            color: #4b5563;
-            margin-bottom: 0.25rem;
         }
 
         .last-message {
             color: #6b7280;
             font-size: 0.875rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .message-detail {
-            display: none;
-            margin-top: 2rem;
+        .chat-container {
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
-        .message-header {
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
+        }
+
+        .book-info {
+            padding: 1rem;
+            background: #f9fafb;
             border-bottom: 1px solid #e5e7eb;
         }
 
-        .messages {
-            margin-bottom: 1.5rem;
+        .book-title {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
         }
 
-        .message {
-            margin-bottom: 1rem;
+        .book-details {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
             display: flex;
+            flex-direction: column;
             gap: 1rem;
         }
 
-        .message-bubble {
-            max-width: 70%;
-            padding: 0.75rem;
-            border-radius: 8px;
-        }
-
-        .message.received .message-bubble {
-            background: #f3f4f6;
+        .message {
+            display: flex;
+            gap: 1rem;
+            max-width: 80%;
         }
 
         .message.sent {
             flex-direction: row-reverse;
+            align-self: flex-end;
+        }
+
+        .message-bubble {
+            padding: 0.75rem;
+            border-radius: 8px;
+            background: #f3f4f6;
         }
 
         .message.sent .message-bubble {
@@ -155,7 +181,9 @@
             color: white;
         }
 
-        .message-form {
+        .message-input-container {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
             display: flex;
             gap: 1rem;
         }
@@ -165,7 +193,15 @@
             padding: 0.75rem;
             border: 1px solid #d1d5db;
             border-radius: 4px;
-            font-size: 1rem;
+            resize: none;
+            height: 45px;
+            font-family: inherit;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
 
         .btn {
@@ -176,90 +212,253 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s;
+            text-decoration: none;
         }
 
         .btn:hover {
             background: #1d4ed8;
+        }
+
+        @media (max-width: 768px) {
+            .messages-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .conversation-list {
+                height: 300px;
+            }
+
+            .chat-container {
+                height: calc(100vh - 450px);
+                min-height: 500px;
+            }
         }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-content">
-            <a href="/" class="logo">TextShare</a>
-            <a href="/mypage.html" class="btn">マイページ</a>
+            <a href="index.html" class="logo">TextShare</a>
+            <nav>
+                <a href="book-register.html" class="btn">教科書を登録</a>
+            </nav>
         </div>
     </header>
 
-    <main class="messages-container">
-        <div class="conversation-list">
-            <div class="conversation-item" onclick="showConversation(1)">
-                <div class="avatar">田</div>
-                <div class="conversation-content">
-                    <div class="conversation-header">
-                        <span class="user-name">田中太郎</span>
-                        <span class="timestamp">2024/03/25 14:30</span>
-                    </div>
-                    <div class="book-title">経済学入門 第3版</div>
-                    <div class="last-message">交換可能でしょうか？</div>
-                </div>
+    <div class="messages-container">
+        <div class="conversation-list" id="conversationList">
+            <!-- 会話リストは動的に生成 -->
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <div class="avatar" id="chatAvatar"></div>
+                <div class="user-name" id="chatUserName"></div>
             </div>
-
-            <div class="conversation-item" onclick="showConversation(2)">
-                <div class="avatar">山</div>
-                <div class="conversation-content">
-                    <div class="conversation-header">
-                        <span class="user-name">山田花子</span>
-                        <span class="timestamp">2024/03/24 16:15</span>
-                    </div>
-                    <div class="book-title">線形代数学</div>
-                    <div class="last-message">ありがとうございました！</div>
-                </div>
+            
+            <div class="book-info" id="bookInfo">
+                <!-- 教科書情報は動的に生成 -->
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- メッセージは動的に生成 -->
+            </div>
+            
+            <div class="message-input-container">
+                <textarea 
+                    class="message-input" 
+                    id="messageInput"
+                    placeholder="メッセージを入力"
+                    maxlength="1000"></textarea>
+                <button class="btn" onclick="sendMessage()">送信</button>
             </div>
         </div>
-
-        <div id="messageDetail" class="message-detail">
-            <div class="message-header">
-                <div class="avatar">田</div>
-                <div>
-                    <div class="user-name">田中太郎</div>
-                    <div class="book-title">経済学入門 第3版</div>
-                </div>
-            </div>
-
-            <div class="messages">
-                <div class="message received">
-                    <div class="avatar">田</div>
-                    <div class="message-bubble">
-                        こんにちは。経済学入門の教科書の交換を希望しています。
-                    </div>
-                </div>
-                <div class="message sent">
-                    <div class="message-bubble">
-                        はい、交換可能です。どの教科書と交換希望ですか？
-                    </div>
-                </div>
-            </div>
-
-            <form class="message-form" onsubmit="return sendMessage(event)">
-                <input type="text" class="message-input" placeholder="メッセージを入力">
-                <button type="submit" class="btn">送信</button>
-            </form>
-        </div>
-    </main>
+    </div>
 
     <script>
-        function showConversation(id) {
-            document.getElementById('messageDetail').style.display = 'block';
+        // サンプルデータ
+        const conversations = [
+            {
+                id: 1,
+                user: {
+                    name: '田中太郎',
+                    avatar: '田'
+                },
+                book: {
+                    id: 1,
+                    title: '経済学入門 第3版',
+                    department: '経済学部',
+                    condition: '良好'
+                },
+                lastMessage: '交換可能でしょうか？',
+                timestamp: '14:30',
+                messages: [
+                    {
+                        sent: false,
+                        text: 'こんにちは。経済学入門の教科書の交換を希望しています。',
+                        time: '14:25'
+                    },
+                    {
+                        sent: false,
+                        text: '状態は良好とのことですが、書き込みなどはありますか？',
+                        time: '14:25'
+                    },
+                    {
+                        sent: true,
+                        text: 'こんにちは。はい、交換可能です。書き込みは最小限で、赤ペンでの下線が数か所あります。',
+                        time: '14:28'
+                    },
+                    {
+                        sent: false,
+                        text: 'ありがとうございます。それでは交換をお願いできますか？',
+                        time: '14:30'
+                    }
+                ]
+            },
+            {
+                id: 2,
+                user: {
+                    name: '山田花子',
+                    avatar: '山'
+                },
+                book: {
+                    id: 2,
+                    title: '線形代数学',
+                    department: '理学部',
+                    condition: '新品同様'
+                },
+                lastMessage: 'ありがとうございました！',
+                timestamp: '13:15',
+                messages: []
+            }
+        ];
+
+        let activeConversation = null;
+
+        // URLパラメータから教科書IDを取得
+        function getBookIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('book');
         }
 
-        function sendMessage(event) {
-            event.preventDefault();
-            const input = event.target.querySelector('.message-input');
-            console.log('Message sent:', input.value);
-            input.value = '';
-            return false;
+        // 教科書IDから会話を検索
+        function findConversationByBookId(bookId) {
+            return conversations.find(conv => conv.book.id === parseInt(bookId));
         }
+
+        // 会話リストの生成
+        function renderConversationList() {
+            const list = document.getElementById('conversationList');
+            list.innerHTML = conversations.map(conv => `
+                <div class="conversation-item ${activeConversation?.id === conv.id ? 'active' : ''}" 
+                     onclick="showConversation(${conv.id})">
+                    <div class="avatar">${conv.user.avatar}</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="user-name">${conv.user.name}</span>
+                            <span class="timestamp">${conv.timestamp}</span>
+                        </div>
+                        <div class="book-title">${conv.book.title}</div>
+                        <div class="last-message">${conv.lastMessage}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // チャット表示の更新
+        function updateChatView() {
+            if (!activeConversation) {
+                document.getElementById('chatContainer').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('chatContainer').style.display = 'flex';
+            document.getElementById('chatAvatar').textContent = activeConversation.user.avatar;
+            document.getElementById('chatUserName').textContent = activeConversation.user.name;
+            
+            document.getElementById('bookInfo').innerHTML = `
+                <div class="book-title">${activeConversation.book.title}</div>
+                <div class="book-details">
+                    <div>学部：${activeConversation.book.department}</div>
+                    <div>状態：${activeConversation.book.condition}</div>
+                </div>
+            `;
+
+            const messages = document.getElementById('chatMessages');
+            messages.innerHTML = activeConversation.messages.map(msg => `
+                <div class="message ${msg.sent ? 'sent' : ''}">
+                    <div class="avatar">${msg.sent ? 'あ' : activeConversation.user.avatar}</div>
+                    <div class="message-bubble">
+                        ${msg.text}
+                        <div class="timestamp" style="font-size: 0.75rem; color: ${msg.sent ? '#fff' : '#6b7280'}">
+                            ${msg.time}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        // 会話の表示
+        function showConversation(id) {
+            const conv = conversations.find(c => c.id === id);
+            if (conv) {
+                activeConversation = conv;
+                renderConversationList();
+                updateChatView();
+                // URLを更新（HistoryAPIを使用）
+                const newUrl = `message.html?book=${conv.book.id}`;
+                history.pushState({}, '', newUrl);
+            }
+        }
+
+        // メッセージ送信
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text || !activeConversation) return;
+            
+            const now = new Date();
+            const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+            
+            activeConversation.messages.push({
+                sent: true,
+                text: text,
+                time: time
+            });
+            
+            activeConversation.lastMessage = text;
+            activeConversation.timestamp = time;
+            
+            input.value = '';
+            renderConversationList();
+            updateChatView();
+        }
+
+        // Enter キーでメッセージ送信
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // 初期表示
+        window.addEventListener('load', function() {
+            const bookId = getBookIdFromUrl();
+            if (bookId) {
+                const conv = findConversationByBookId(parseInt(bookId));
+                if (conv) {
+                    showConversation(conv.id);
+                }
+            } else if (conversations.length > 0) {
+                showConversation(conversations[0].id);
+            }
+            renderConversationList();
+        });
     </script>
 </body>
 </html>
