@@ -21,6 +21,7 @@
             background: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             padding: 1rem;
+            margin-bottom: 2rem;
         }
 
         .header-content {
@@ -38,13 +39,18 @@
             text-decoration: none;
         }
 
-        .search-container {
+        .container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 1.5rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .search-container {
             background: white;
+            padding: 1.5rem;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
         }
 
         .search-box {
@@ -64,6 +70,7 @@
         .filter-group {
             display: flex;
             gap: 1rem;
+            flex-wrap: wrap;
         }
 
         select {
@@ -71,15 +78,14 @@
             border: 1px solid #d1d5db;
             border-radius: 4px;
             font-size: 1rem;
+            min-width: 150px;
         }
 
         .books-grid {
-            max-width: 1200px;
-            margin: 2rem auto;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1.5rem;
-            padding: 0 1rem;
+            padding: 1rem 0;
         }
 
         .book-card {
@@ -87,6 +93,13 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             overflow: hidden;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-card:hover {
+            transform: translateY(-2px);
         }
 
         .book-image {
@@ -98,17 +111,26 @@
 
         .book-info {
             padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .book-title {
             font-weight: bold;
             margin-bottom: 0.5rem;
+            font-size: 1.1rem;
         }
 
         .book-details {
             color: #6b7280;
             font-size: 0.875rem;
             margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .book-details p {
+            margin-bottom: 0.25rem;
         }
 
         .btn {
@@ -120,18 +142,31 @@
             border-radius: 4px;
             font-size: 0.875rem;
             transition: background-color 0.3s;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            width: 100%;
         }
 
         .btn:hover {
             background: #1d4ed8;
         }
 
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            color: #6b7280;
+        }
+
         @media (max-width: 640px) {
             .filter-group {
                 flex-direction: column;
             }
-            .books-grid {
-                grid-template-columns: 1fr;
+            
+            select {
+                width: 100%;
             }
         }
     </style>
@@ -139,83 +174,143 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <a href="/" class="logo">TextShare</a>
-            <a href="/mypage.html" class="btn">マイページ</a>
+            <a href="index.html" class="logo">TextShare</a>
+            <a href="book-register.html" class="btn" style="width: auto;">教科書を登録</a>
         </div>
     </header>
 
-    <main>
+    <div class="container">
         <div class="search-container">
             <div class="search-box">
                 <input 
                     type="text" 
                     class="search-input" 
-                    placeholder="教科書名、科目名で検索">
+                    id="searchInput"
+                    placeholder="教科書名、著者名で検索">
             </div>
             <div class="filter-group">
-                <select>
+                <select id="departmentFilter">
                     <option value="">学部を選択</option>
                     <option value="literature">文学部</option>
                     <option value="economics">経済学部</option>
                     <option value="science">理学部</option>
+                    <option value="engineering">工学部</option>
                 </select>
-                <select>
+                <select id="conditionFilter">
                     <option value="">状態を選択</option>
                     <option value="new">新品同様</option>
                     <option value="good">良好</option>
                     <option value="fair">普通</option>
                 </select>
-                <select>
-                    <option value="">大学を選択</option>
-                    <option value="tokyo">東京大学</option>
-                    <option value="waseda">早稲田大学</option>
-                    <option value="keio">慶應義塾大学</option>
-                </select>
             </div>
         </div>
 
-        <div class="books-grid">
-            <!-- サンプルの教科書カード -->
-            <div class="book-card">
-                <img src="/api/placeholder/250/200" alt="経済学入門" class="book-image">
-                <div class="book-info">
-                    <h3 class="book-title">経済学入門 第3版</h3>
-                    <div class="book-details">
-                        <p>経済学部</p>
-                        <p>状態：良好</p>
-                        <p>希望交換：ミクロ経済学</p>
-                    </div>
-                    <a href="#" class="btn">メッセージを送る</a>
-                </div>
-            </div>
-
-            <div class="book-card">
-                <img src="/api/placeholder/250/200" alt="線形代数学" class="book-image">
-                <div class="book-info">
-                    <h3 class="book-title">線形代数学</h3>
-                    <div class="book-details">
-                        <p>理学部</p>
-                        <p>状態：新品同様</p>
-                        <p>希望交換：微分積分学</p>
-                    </div>
-                    <a href="#" class="btn">メッセージを送る</a>
-                </div>
-            </div>
+        <div class="books-grid" id="booksGrid">
+            <!-- 教科書カードはJavaScriptで動的に生成 -->
         </div>
-    </main>
+    </div>
 
     <script>
-        // 検索機能の実装（後ほど）
-        document.querySelector('.search-input').addEventListener('input', function(e) {
-            console.log('Search query:', e.target.value);
-        });
+        // サンプルデータ（実際はAPIから取得）
+        const books = [
+            {
+                id: 1,
+                title: '経済学入門 第3版',
+                author: '山田太郎',
+                department: 'economics',
+                departmentName: '経済学部',
+                condition: 'good',
+                conditionName: '良好',
+                wishlist: 'ミクロ経済学',
+                image: '/api/placeholder/250/200'
+            },
+            {
+                id: 2,
+                title: '線形代数学',
+                author: '鈴木一郎',
+                department: 'science',
+                departmentName: '理学部',
+                condition: 'new',
+                conditionName: '新品同様',
+                wishlist: '微分積分学',
+                image: '/api/placeholder/250/200'
+            },
+            {
+                id: 3,
+                title: '日本文学史概説',
+                author: '佐藤花子',
+                department: 'literature',
+                departmentName: '文学部',
+                condition: 'fair',
+                conditionName: '普通',
+                wishlist: '古典文学講読',
+                image: '/api/placeholder/250/200'
+            }
+        ];
 
-        // フィルター機能の実装（後ほど）
-        document.querySelectorAll('select').forEach(select => {
-            select.addEventListener('change', function(e) {
-                console.log('Filter changed:', e.target.value);
+        // 教科書カードのHTML生成
+        function createBookCard(book) {
+            return `
+                <div class="book-card">
+                    <img src="${book.image}" alt="${book.title}" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-title">${book.title}</h3>
+                        <div class="book-details">
+                            <p>著者：${book.author}</p>
+                            <p>学部：${book.departmentName}</p>
+                            <p>状態：${book.conditionName}</p>
+                            <p>希望：${book.wishlist}</p>
+                        </div>
+                        <button class="btn" onclick="sendMessage(${book.id})">
+                            メッセージを送る
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 検索とフィルタリング
+        function filterBooks() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const department = document.getElementById('departmentFilter').value;
+            const condition = document.getElementById('conditionFilter').value;
+
+            const filteredBooks = books.filter(book => {
+                const matchesSearch = book.title.toLowerCase().includes(searchText) || 
+                                    book.author.toLowerCase().includes(searchText);
+                const matchesDepartment = !department || book.department === department;
+                const matchesCondition = !condition || book.condition === condition;
+
+                return matchesSearch && matchesDepartment && matchesCondition;
             });
-        });
+
+            displayBooks(filteredBooks);
+        }
+
+        // 教科書一覧の表示
+        function displayBooks(booksToShow) {
+            const grid = document.getElementById('booksGrid');
+            if (booksToShow.length === 0) {
+                grid.innerHTML = '<div class="no-results">該当する教科書が見つかりません</div>';
+                return;
+            }
+
+            grid.innerHTML = booksToShow.map(book => createBookCard(book)).join('');
+        }
+
+        // メッセージ送信（現在はモック）
+        function sendMessage(bookId) {
+            const book = books.find(b => b.id === bookId);
+            alert(`「${book.title}」の取引メッセージ機能は現在開発中です。`);
+        }
+
+        // イベントリスナーの設定
+        document.getElementById('searchInput').addEventListener('input', filterBooks);
+        document.getElementById('departmentFilter').addEventListener('change', filterBooks);
+        document.getElementById('conditionFilter').addEventListener('change', filterBooks);
+
+        // 初期表示
+        displayBooks(books);
     </script>
 </body>
 </html>
