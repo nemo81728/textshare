@@ -1,7 +1,7 @@
-<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>メッセージ - TextShare</title>
     <style>
@@ -224,15 +224,43 @@
         .status-completed {
             color: #1d4ed8;
         }
-    </style>
-    <script src="auth.js"></script>
-    <script src="exchange.js"></script>
-</head>
-<body>
-    <!-- 既存のHTML構造はそのまま維持 -->
+@@ -45,117 +233,68 @@
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="logo">TextShare</a>
+            <nav>
+                <a href="book-register.html" class="btn">教科書を登録</a>
+            </nav>
+        </div>
+    </header>
+    <div class="messages-container">
+        <div class="conversation-list" id="conversationList">
+            <!-- 会話リストは動的に生成 -->
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <div class="avatar" id="chatAvatar"></div>
+                <div class="user-name" id="chatUserName"></div>
+            </div>
+            
+            <div class="book-info" id="bookInfo">
+                <!-- 教科書情報は動的に生成 -->
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- メッセージは動的に生成 -->
+            </div>
+            
+            <div class="message-input-container">
+                <textarea 
+                    class="message-input" 
+                    id="messageInput"
+                    placeholder="メッセージを入力"
+                    maxlength="1000"></textarea>
+                <button class="btn" onclick="sendMessage()">送信</button>
+            </div>
+        </div>
 @@ -278,7 +82,10 @@
     </div>
 
@@ -252,15 +280,45 @@
             {
                 id: 2,
                 user: {
+                    name: '田中太郎',
+                    avatar: '田'
                     name: '山田花子',
                     avatar: '山'
                 },
                 book: {
+                    id: 1,
+                    title: '経済学入門 第3版',
+                    department: '経済学部',
+                    condition: '良好'
                     id: 2,
                     title: '線形代数学',
                     department: '理学部',
                     condition: '新品同様'
                 },
+                lastMessage: '交換可能でしょうか？',
+                timestamp: '14:30',
+                messages: [
+                    {
+                        sent: false,
+                        text: 'こんにちは。経済学入門の教科書の交換を希望しています。',
+                        time: '14:25'
+                    },
+                    {
+                        sent: false,
+                        text: '状態は良好とのことですが、書き込みなどはありますか？',
+                        time: '14:25'
+                    },
+                    {
+                        sent: true,
+                        text: 'こんにちは。はい、交換可能です。書き込みは最小限で、赤ペンでの下線が数か所あります。',
+                        time: '14:28'
+                    },
+                    {
+                        sent: false,
+                        text: 'ありがとうございます。それでは交換をお願いできますか？',
+                        time: '14:30'
+                    }
+                ]
                 lastMessage: 'ありがとうございました！',
                 timestamp: '13:15',
                 messages: []
@@ -282,6 +340,18 @@
         function renderConversationList() {
             const list = document.getElementById('conversationList');
             list.innerHTML = conversations.map(conv => `
+                <div class="conversation-item ${activeConversation?.id === conv.id ? 'active' : ''}" 
+                     onclick="showConversation(${conv.id})">
+                    <div class="avatar">${conv.user.avatar}</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="user-name">${conv.user.name}</span>
+                            <span class="timestamp">${conv.timestamp}</span>
+                        </div>
+                        <div class="book-title">${conv.book.title}</div>
+                        <div class="last-message">${conv.lastMessage}</div>
+                    </div>
+                </div>
 @@ -367,7 +145,7 @@
             `).join('');
         }
@@ -291,31 +361,32 @@
         function updateChatView() {
             if (!activeConversation) {
                 document.getElementById('chatContainer').style.display = 'none';
+                return;
+            }
+            document.getElementById('chatContainer').style.display = 'flex';
 @@ -378,14 +156,22 @@
             document.getElementById('chatAvatar').textContent = activeConversation.user.avatar;
             document.getElementById('chatUserName').textContent = activeConversation.user.name;
-
+            
             // 教科書情報と交換アクション
             document.getElementById('bookInfo').innerHTML = `
                 <div class="book-title">${activeConversation.book.title}</div>
-                <div class="book-details">
-                    <div>学部：${activeConversation.book.department}</div>
-                    <div>状態：${activeConversation.book.condition}</div>
-                </div>
-                <div class="exchange-actions">
-                    <button class="btn" onclick="sendExchangeRequest(${activeConversation.book.id})">
-                        交換をリクエスト
-                    </button>
-                    <div class="exchange-status" id="exchangeStatus"></div>
-                </div>
-            `;
-
-            // メッセージ表示
+@@ -175,56 +314,38 @@
             const messages = document.getElementById('chatMessages');
             messages.innerHTML = activeConversation.messages.map(msg => `
                 <div class="message ${msg.sent ? 'sent' : ''}">
+                    <div class="avatar">${msg.sent ? 'あ' : activeConversation.user.avatar}</div>
+                    <div class="message-bubble">
+                        ${msg.text}
+                        <div class="timestamp" style="font-size: 0.75rem; color: ${msg.sent ? '#fff' : '#6b7280'}">
+                            ${msg.time}
+                        </div>
+                    </div>
+                </div>
 @@ -400,22 +186,22 @@
             `).join('');
+            
+            messages.scrollTop = messages.scrollHeight;
 
             messages.scrollTop = messages.scrollHeight;
             // 既存の交換状態を確認して表示
@@ -341,6 +412,23 @@
         function sendMessage() {
             const input = document.getElementById('messageInput');
             const text = input.value.trim();
+            
+            if (!text || !activeConversation) return;
+            
+            const now = new Date();
+            const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+            
+            activeConversation.messages.push({
+                sent: true,
+                text: text,
+                time: time
+            });
+            
+            activeConversation.lastMessage = text;
+            activeConversation.timestamp = time;
+            
+            input.value = '';
+            renderConversationList();
 @@ -439,33 +225,45 @@
             updateChatView();
         }
@@ -349,28 +437,21 @@
         // 交換リクエストを送信（新規追加）
         function sendExchangeRequest(bookId) {
             const message = prompt('交換リクエストメッセージを入力してください：');
-            if (message) {
-                const result = exchange.sendRequest(bookId, message);
-                if (result) {
-                    alert('交換リクエストを送信しました');
-                    updateExchangeStatus(result.id);
+@@ -236,7 +357,6 @@
                 }
             }
         }
         // 交換状態を更新（新規追加）
         function updateExchangeStatus(exchangeId) {
             const status = exchange.exchanges.find(e => e.id === exchangeId);
-            if (status) {
-                const statusElement = document.getElementById('exchangeStatus');
-                statusElement.textContent = `状態: ${exchange.getStatusLabel(status.status)}`;
+@@ -246,7 +366,6 @@
                 statusElement.className = `exchange-status status-${status.status}`;
             }
         }
         // Enter キーでメッセージ送信（既存の機能）
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
+@@ -255,6 +374,15 @@
             }
         });
 
@@ -386,10 +467,7 @@
         // 認証チェック
         document.addEventListener('DOMContentLoaded', () => {
             auth.requireAuth();
-            // 初期表示
-            if (conversations.length > 0) {
-                showConversation(conversations[0].id);
-            }
+@@ -265,5 +393,11 @@
             renderConversationList();
         });
     </script>
