@@ -109,14 +109,14 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <a href="/" class="logo">TextShare</a>
+            <a href="index.html" class="logo">TextShare</a>
         </div>
     </header>
 
     <main>
         <div class="login-container">
             <h1>ログイン</h1>
-            <form id="loginForm">
+            <form id="loginForm" novalidate>
                 <div class="form-group">
                     <label for="email">メールアドレス</label>
                     <input 
@@ -138,7 +138,7 @@
                 <button type="submit" class="btn">ログイン</button>
             </form>
             <p class="help-text">
-                アカウントをお持ちでない方は<a href="/register.html">新規登録</a>
+                アカウントをお持ちでない方は<a href="register.html">新規登録</a>
             </p>
         </div>
     </main>
@@ -146,43 +146,25 @@
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
+
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            
-            // ここにログイン処理を実装
-            console.log('Login attempt:', { email, password });
-            
-            // バックエンドAPIとの連携は後ほど実装
-            alert('ログイン処理は現在実装中です');
+
+            // 入力値の検証
+            if (!email || !password) {
+                alert('メールアドレスとパスワードを入力してください');
+                return;
+            }
+
+            // メールアドレスの形式チェック
+            if (!email.includes('@')) {
+                alert('正しいメールアドレスを入力してください');
+                return;
+            }
+
+            // ログイン処理（現在はモック）
+            alert('ログイン機能は現在開発中です。\n\n入力された情報：\nメール：' + email);
         });
     </script>
-    <script>
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // フォームのデフォルト送信を防止
-
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        // 入力値の検証
-        if (!email || !password) {
-            alert('メールアドレスとパスワードを入力してください');
-            return;
-        }
-
-        // メールアドレスの形式チェック
-        if (!email.includes('@')) {
-            alert('正しいメールアドレスを入力してください');
-            return;
-        }
-
-        // ここで実際のログイン処理を行う（今はコンソールに表示のみ）
-        console.log('ログイン情報:', {
-            email: email,
-            password: password
-        });
-        
-        alert('ログイン処理が実行されました（テスト用）');
-    });
-</script>
 </body>
 </html>
