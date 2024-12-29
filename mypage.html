@@ -21,6 +21,7 @@
             background: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             padding: 1rem;
+            margin-bottom: 2rem;
         }
 
         .header-content {
@@ -38,9 +39,9 @@
             text-decoration: none;
         }
 
-        .mypage-container {
+        .container {
             max-width: 1200px;
-            margin: 2rem auto;
+            margin: 0 auto 2rem;
             padding: 0 1rem;
             display: grid;
             grid-template-columns: 250px 1fr;
@@ -71,8 +72,22 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 1rem;
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: #4b5563;
+        }
+
+        .profile-info {
+            margin-bottom: 1rem;
+        }
+
+        .profile-name {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-university {
+            color: #6b7280;
         }
 
         .nav-menu {
@@ -92,19 +107,21 @@
             transition: background-color 0.2s;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover,
+        .nav-link.active {
             background: #f3f4f6;
             color: #2563eb;
         }
 
-        .content {
+        .main-content {
             background: white;
-            padding: 2rem;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 2rem;
         }
 
         .section-title {
+            font-size: 1.5rem;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid #e5e7eb;
@@ -117,7 +134,6 @@
         }
 
         .book-card {
-            background: white;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
             overflow: hidden;
@@ -154,16 +170,18 @@
             border-radius: 4px;
             font-size: 0.875rem;
             transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
         }
 
         .btn-outline {
             background: white;
             color: #2563eb;
             border: 1px solid #2563eb;
-        }
-
-        .btn:hover {
-            background: #1d4ed8;
         }
 
         .btn-outline:hover {
@@ -175,8 +193,38 @@
             gap: 0.5rem;
         }
 
+        .exchange-history {
+            margin-top: 2rem;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .history-book-info {
+            flex: 1;
+        }
+
+        .history-status {
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .status-complete {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
         @media (max-width: 768px) {
-            .mypage-container {
+            .container {
                 grid-template-columns: 1fr;
             }
         }
@@ -185,77 +233,182 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <a href="/" class="logo">TextShare</a>
-            <a href="/messages.html" class="btn">メッセージ</a>
+            <a href="index.html" class="logo">TextShare</a>
+            <a href="message.html" class="btn">メッセージ</a>
         </div>
     </header>
 
-    <main class="mypage-container">
+    <div class="container">
         <aside class="sidebar">
             <div class="profile">
                 <div class="avatar">山</div>
-                <h2>山田太郎</h2>
-                <p>東京大学</p>
+                <div class="profile-info">
+                    <div class="profile-name">山田太郎</div>
+                    <div class="profile-university">東京大学</div>
+                </div>
+                <button class="btn btn-outline" onclick="editProfile()">プロフィール編集</button>
             </div>
             <nav>
                 <ul class="nav-menu">
                     <li class="nav-item">
-                        <a href="#" class="nav-link active">登録した教科書</a>
+                        <a href="#books" class="nav-link active" onclick="showSection('books')">登録した教科書</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">交換履歴</a>
+                        <a href="#history" class="nav-link" onclick="showSection('history')">交換履歴</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">プロフィール設定</a>
+                        <a href="#settings" class="nav-link" onclick="showSection('settings')">設定</a>
                     </li>
                 </ul>
             </nav>
         </aside>
 
-        <div class="content">
-            <h2 class="section-title">登録した教科書</h2>
-            <div class="books-grid">
-                <div class="book-card">
-                    <img src="/api/placeholder/200/150" alt="経済学入門" class="book-image">
-                    <div class="book-info">
-                        <h3 class="book-title">経済学入門 第3版</h3>
-                        <div class="book-details">
-                            <p>経済学部</p>
-                            <p>状態：良好</p>
-                        </div>
-                        <div class="action-buttons">
-                            <a href="#" class="btn btn-outline">編集</a>
-                            <a href="#" class="btn">削除</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="book-card">
-                    <img src="/api/placeholder/200/150" alt="線形代数学" class="book-image">
-                    <div class="book-info">
-                        <h3 class="book-title">線形代数学</h3>
-                        <div class="book-details">
-                            <p>理学部</p>
-                            <p>状態：新品同様</p>
-                        </div>
-                        <div class="action-buttons">
-                            <a href="#" class="btn btn-outline">編集</a>
-                            <a href="#" class="btn">削除</a>
-                        </div>
-                    </div>
+        <main class="main-content">
+            <div id="booksSection">
+                <h2 class="section-title">登録した教科書</h2>
+                <div class="books-grid" id="booksGrid">
+                    <!-- 教科書リストは動的に生成 -->
                 </div>
             </div>
-        </div>
-    </main>
+
+            <div id="historySection" style="display: none;">
+                <h2 class="section-title">交換履歴</h2>
+                <div id="exchangeHistory">
+                    <!-- 交換履歴は動的に生成 -->
+                </div>
+            </div>
+
+            <div id="settingsSection" style="display: none;">
+                <h2 class="section-title">設定</h2>
+                <!-- 設定項目は後ほど実装 -->
+            </div>
+        </main>
+    </div>
 
     <script>
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector('.nav-link.active').classList.remove('active');
-                this.classList.add('active');
+        // サンプルデータ
+        const myBooks = [
+            {
+                id: 1,
+                title: '経済学入門 第3版',
+                department: '経済学部',
+                condition: '良好',
+                image: '/api/placeholder/200/150'
+            },
+            {
+                id: 2,
+                title: '線形代数学',
+                department: '理学部',
+                condition: '新品同様',
+                image: '/api/placeholder/200/150'
+            }
+        ];
+
+        const exchangeHistory = [
+            {
+                id: 1,
+                book: '経済学入門 第3版',
+                with: '田中花子',
+                date: '2024/03/20',
+                status: '完了',
+                statusClass: 'status-complete'
+            },
+            {
+                id: 2,
+                book: '微分積分学',
+                with: '鈴木一郎',
+                date: '2024/03/15',
+                status: '進行中',
+                statusClass: ''
+            }
+        ];
+
+        // 教科書カードの生成
+        function createBookCard(book) {
+            return `
+                <div class="book-card">
+                    <img src="${book.image}" alt="${book.title}" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-title">${book.title}</h3>
+                        <div class="book-details">
+                            <p>学部：${book.department}</p>
+                            <p>状態：${book.condition}</p>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-outline" onclick="editBook(${book.id})">編集</button>
+                            <button class="btn" onclick="deleteBook(${book.id})">削除</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 交換履歴項目の生成
+        function createHistoryItem(history) {
+            return `
+                <div class="history-item">
+                    <div class="history-book-info">
+                        <div class="book-title">${history.book}</div>
+                        <div class="book-details">
+                            交換相手：${history.with}<br>
+                            日付：${history.date}
+                        </div>
+                    </div>
+                    <div class="history-status ${history.statusClass}">${history.status}</div>
+                </div>
+            `;
+        }
+
+        // セクションの表示切り替え
+        function showSection(sectionId) {
+            document.querySelectorAll('.main-content > div').forEach(div => {
+                div.style.display = 'none';
             });
-        });
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            document.getElementById(sectionId + 'Section').style.display = 'block';
+            document.querySelector(`[href="#${sectionId}"]`).classList.add('active');
+
+            if (sectionId === 'books') {
+                displayBooks();
+            } else if (sectionId === 'history') {
+                displayHistory();
+            }
+        }
+
+        // 教科書一覧の表示
+        function displayBooks() {
+            const grid = document.getElementById('booksGrid');
+            grid.innerHTML = myBooks.map(book => createBookCard(book)).join('');
+        }
+
+        // 交換履歴の表示
+        function displayHistory() {
+            const history = document.getElementById('exchangeHistory');
+            history.innerHTML = exchangeHistory.map(item => createHistoryItem(item)).join('');
+        }
+
+        // 教科書の編集（モック）
+        function editBook(bookId) {
+            alert(`教科書ID: ${bookId} の編集機能は現在開発中です。`);
+        }
+
+        // 教科書の削除（モック）
+        function deleteBook(bookId) {
+            if (confirm('この教科書を削除してもよろしいですか？')) {
+                alert(`教科書ID: ${bookId} の削除機能は現在開発中です。`);
+            }
+        }
+
+        // プロフィール編集（モック）
+        function editProfile() {
+            alert('プロフィール編集機能は現在開発中です。');
+        }
+
+        // 初期表示
+        displayBooks();
     </script>
 </body>
 </html>
