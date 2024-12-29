@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TextShare - 大学教科書交換サイト</title>
+    <title>TextShare - 大学生のための教科書交換プラットフォーム</title>
     <style>
         * {
             margin: 0;
@@ -14,17 +14,22 @@
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
+            color: #1f2937;
         }
 
         .header {
             background: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
         }
 
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -43,61 +48,89 @@
         }
 
         .btn {
-            padding: 0.5rem 1rem;
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
             border-radius: 4px;
             text-decoration: none;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            font-weight: 500;
         }
 
         .btn-outline {
             color: #2563eb;
+            border: 1px solid #2563eb;
         }
 
         .btn-outline:hover {
-            background-color: #ebf5ff;
+            background: #ebf5ff;
         }
 
         .btn-primary {
-            background-color: #2563eb;
+            background: #2563eb;
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: #1d4ed8;
+            background: #1d4ed8;
+            transform: translateY(-1px);
         }
 
         .hero {
-            background: linear-gradient(to right, #2563eb, #60a5fa);
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
             color: white;
-            padding: 4rem 1rem;
+            padding: 8rem 1rem 4rem;
             text-align: center;
         }
 
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
         .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
         }
 
         .hero p {
             font-size: 1.25rem;
             margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-image {
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .features {
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 0 1rem;
+            padding: 4rem 1rem;
+            background: #f8fafc;
         }
 
-        .features h2 {
+        .section-title {
             text-align: center;
+            font-size: 2rem;
             margin-bottom: 3rem;
         }
 
         .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
+            padding: 0 1rem;
         }
 
         .feature-card {
@@ -106,38 +139,48 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
         }
 
         .feature-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 1rem;
+            width: 64px;
+            height: 64px;
+            background: #ebf5ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: #2563eb;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
         }
 
         .steps {
-            background: #f8fafc;
             padding: 4rem 1rem;
-        }
-
-        .steps h2 {
-            text-align: center;
-            margin-bottom: 3rem;
         }
 
         .steps-grid {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
         }
 
         .step-card {
-            background: white;
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             text-align: center;
+            position: relative;
         }
 
         .step-number {
@@ -151,89 +194,150 @@
             justify-content: center;
             margin: 0 auto 1rem;
             font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .cta {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .footer {
             background: #1f2937;
             color: #9ca3af;
+            padding: 2rem 1rem;
             text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2rem;
             }
-            .features-grid, .steps-grid {
-                grid-template-columns: 1fr;
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .nav-buttons {
+                display: none;
+            }
+
+            .nav-buttons.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 1rem;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .feature-card {
+                margin: 0 1rem;
             }
         }
     </style>
 </head>
 <body>
-   <header class="header">
-    <div class="header-content">
-        <a href="index.html" class="logo">TextShare</a>
-        <nav class="nav-buttons">
-            <a href="book-register.html" class="btn btn-outline">教科書を登録</a>
-            <a href="books.html" class="btn btn-outline">教科書を探す</a>
-            <a href="message.html" class="btn btn-outline">メッセージ</a>
-            <a href="login.html" class="btn btn-outline">ログイン</a>
-            <a href="register.html" class="btn btn-primary">新規登録</a>
-        </nav>
-    </div>
-</header>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">TextShare</a>
+            <nav class="nav-buttons">
+                <a href="book-register.html" class="btn btn-outline">教科書を登録</a>
+                <a href="books.html" class="btn btn-outline">教科書を探す</a>
+                <a href="message.html" class="btn btn-outline">メッセージ</a>
+                <a href="login.html" class="btn btn-outline">ログイン</a>
+                <a href="register.html" class="btn btn-primary">新規登録</a>
+            </nav>
+        </div>
+    </header>
+
     <main>
         <section class="hero">
-            <h1>大学の教科書を、もっと手軽に。</h1>
-            <p>使い終わった教科書を交換して、新しい学びを始めよう。</p>
-            <a href="/books.html" class="btn btn-primary">教科書を探す</a>
+            <div class="hero-content">
+                <h1>大学生のための<br>教科書交換プラットフォーム</h1>
+                <p>必要な教科書を手に入れる、新しい方法。<br>使い終わった教科書を交換して、賢く学習しよう。</p>
+                <div class="hero-buttons">
+                    <a href="register.html" class="btn btn-primary">無料で始める</a>
+                    <a href="books.html" class="btn btn-outline" style="background: rgba(255,255,255,0.1); color: white;">教科書を探す</a>
+                </div>
+                <img src="/api/placeholder/600/300" alt="教科書交換の様子" class="hero-image">
+            </div>
         </section>
 
         <section class="features">
-            <h2>TextShareの特徴</h2>
+            <h2 class="section-title">TextShareの特徴</h2>
             <div class="features-grid">
                 <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3 class="feature-title">費用ゼロ</h3>
+                    <p>教科書の交換に費用は一切かかりません。お金の心配なく、必要な教科書を手に入れられます。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3 class="feature-title">安心の取引</h3>
+                    <p>同じ大学の学生同士で交換。交換前に実物を確認できるので、安心して取引できます。</p>
+                </div>
+                <div class="feature-card">
                     <div class="feature-icon">🔄</div>
-                    <h3>簡単な交換プロセス</h3>
-                    <p>メッセージを送って交換の約束をするだけ。面倒な手続きは一切ありません。</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔍</div>
-                    <h3>素早い教科書検索</h3>
-                    <p>学部・学科、科目名など、様々な条件で必要な教科書を見つけることができます。</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">👥</div>
-                    <h3>同じ大学の仲間と</h3>
-                    <p>同じ大学の学生同士で交換することで、確実に必要な教科書を入手できます。</p>
+                    <h3 class="feature-title">簡単操作</h3>
+                    <p>必要な教科書を探して、メッセージを送るだけ。面倒な手続きは一切ありません。</p>
                 </div>
             </div>
         </section>
 
         <section class="steps">
-            <h2>使い方</h2>
+            <h2 class="section-title">使い方</h2>
             <div class="steps-grid">
                 <div class="step-card">
                     <div class="step-number">1</div>
-                    <h3>アカウント作成</h3>
-                    <p>大学のメールアドレスで登録</p>
+                    <h3 class="step-title">アカウント作成</h3>
+                    <p>大学のメールアドレスで登録するだけ。すぐに利用開始できます。</p>
                 </div>
                 <div class="step-card">
                     <div class="step-number">2</div>
-                    <h3>教科書を登録</h3>
-                    <p>提供できる教科書の情報を入力</p>
+                    <h3 class="step-title">教科書を登録</h3>
+                    <p>交換可能な教科書を登録。状態や希望する教科書も設定できます。</p>
                 </div>
                 <div class="step-card">
                     <div class="step-number">3</div>
-                    <h3>教科書を探す</h3>
-                    <p>必要な教科書を検索</p>
+                    <h3 class="step-title">教科書を探す</h3>
+                    <p>必要な教科書を検索。学部や状態でフィルタリングも可能です。</p>
                 </div>
                 <div class="step-card">
                     <div class="step-number">4</div>
-                    <h3>メッセージで交換</h3>
-                    <p>相手とやり取りして交換を約束</p>
+                    <h3 class="step-title">メッセージで交換</h3>
+                    <p>気になる教科書が見つかったら、メッセージを送って交換を始めましょう。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="cta-content">
+                <h2>今すぐ始めよう</h2>
+                <p>必要な教科書との出会いが、ここにあります。</p>
+                <div style="margin-top: 2rem;">
+                    <a href="register.html" class="btn btn-primary">無料で登録する</a>
                 </div>
             </div>
         </section>
