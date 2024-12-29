@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教科書登録 - TextShare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            background: #f8fafc;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #2563eb;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .register-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        .image-upload {
+            border: 2px dashed #d1d5db;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            position: relative;
+        }
+
+        .image-upload:hover {
+            border-color: #2563eb;
+        }
+
+        .preview-container {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 200px;
+            max-height: 200px;
+            display: none;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+
+        .remove-image {
+            display: none;
+            margin-top: 0.5rem;
+            color: #dc2626;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .condition-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        .error {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        @media (max-width: 640px) {
+            .register-container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">TextShare</a>
+            <a href="mypage.html" class="btn" style="width: auto;">マイページ</a>
+        </div>
+    </header>
+
+    <main class="register-container">
+        <h1 class="section-title">教科書を登録する</h1>
+        <form id="bookRegisterForm" novalidate>
+            <div class="form-group">
+                <label for="title">教科書名 *</label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    required 
+                    placeholder="例：経済学入門 第3版">
+                <div class="error" id="titleError">教科書名を入力してください</div>
+            </div>
+
+            <div class="form-group">
+                <label for="author">著者名 *</label>
+                <input 
+                    type="text" 
+                    id="author" 
+                    required 
+                    placeholder="例：山田太郎">
+                <div class="error" id="authorError">著者名を入力してください</div>
+            </div>
+
+            <div class="form-group">
+                <label for="department">学部 *</label>
+                <select id="department" required>
+                    <option value="">選択してください</option>
+                    <option value="literature">文学部</option>
+                    <option value="economics">経済学部</option>
+                    <option value="science">理学部</option>
+                    <option value="engineering">工学部</option>
+                </select>
+                <div class="error" id="departmentError">学部を選択してください</div>
+            </div>
+
+            <div class="form-group">
+                <label for="condition">状態 *</label>
+                <select id="condition" required>
+                    <option value="">選択してください</option>
+                    <option value="new">新品同様</option>
+                    <option value="good">良好</option>
+                    <option value="fair">普通</option>
+                </select>
+                <div class="error" id="conditionError">状態を選択してください</div>
+                <div class="condition-description">
+                    新品同様：書き込みなし、破損なし<br>
+                    良好：軽い書き込みあり、破損なし<br>
+                    普通：書き込みあり、軽い破損あり
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="wishlist">希望する教科書</label>
+                <input 
+                    type="text" 
+                    id="wishlist" 
+                    placeholder="例：ミクロ経済学">
+            </div>
+
+            <div class="form-group">
+                <label>教科書の写真 *</label>
+                <div class="image-upload" onclick="document.getElementById('imageInput').click()">
+                    <input 
+                        type="file" 
+                        id="imageInput" 
+                        accept="image/*" 
+                        style="display: none">
+                    <p>クリックして写真をアップロード</p>
+                    <div class="preview-container">
+                        <img id="preview" class="preview-image">
+                        <div id="removeImage" class="remove-image">写真を削除</div>
+                    </div>
+                </div>
+                <div class="error" id="imageError">写真をアップロードしてください</div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">備考</label>
+                <textarea 
+                    id="description" 
+                    rows="4" 
+                    placeholder="状態の詳細や交換条件など"></textarea>
+            </div>
+
+            <button type="submit" class="btn">登録する</button>
+        </form>
+    </main>
+
+    <script>
+        // 画像プレビュー機能
+        const imageInput = document.getElementById('imageInput');
+        const preview = document.getElementById('preview');
+        const removeImage = document.getElementById('removeImage');
+        let imageFile = null;
+
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                imageFile = file;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    removeImage.style.display = 'block';
+                    document.getElementById('imageError').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeImage.addEventListener('click', function(e) {
+            e.stopPropagation();
+            imageInput.value = '';
+            preview.src = '';
+            preview.style.display = 'none';
+            removeImage.style.display = 'none';
+            imageFile = null;
+        });
+
+        // フォーム送信処理
+        document.getElementById('bookRegisterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let hasError = false;
+
+            // 必須項目のチェック
+            const required = {
+                'title': '教科書名を入力してください',
+                'author': '著者名を入力してください',
+                'department': '学部を選択してください',
+                'condition': '状態を選択してください'
+            };
+
+            // エラーメッセージをリセット
+            Object.keys(required).forEach(id => {
+                document.getElementById(id + 'Error').style.display = 'none';
+            });
+
+            // 各フィールドの検証
+            Object.keys(required).forEach(id => {
+                const value = document.getElementById(id).value;
+                if (!value) {
+                    document.getElementById(id + 'Error').style.display = 'block';
+                    hasError = true;
+                }
+            });
+
+            // 画像の検証
+            if (!imageFile) {
+                document.getElementById('imageError').style.display = 'block';
+                hasError = true;
+            }
+
+            if (hasError) {
+                return;
+            }
+
+            // フォームデータの収集
+            const formData = {
+                title: document.getElementById('title').value,
+                author: document.getElementById('author').value,
+                department: document.getElementById('department').value,
+                condition: document.getElementById('condition').value,
+                wishlist: document.getElementById('wishlist').value,
+                description: document.getElementById('description').value,
+                imageFile: imageFile
+            };
+
+            // 登録処理（現在はモック）
+            alert('教科書登録機能は現在開発中です。\n\n登録される情報：\n' +
+                  '教科書名：' + formData.title + '\n' +
+                  '著者名：' + formData.author + '\n' +
+                  '学部：' + formData.department + '\n' +
+                  '状態：' + formData.condition + '\n' +
+                  '希望教科書：' + formData.wishlist);
+        });
+    </script>
+</body>
+</html>
