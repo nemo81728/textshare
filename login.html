@@ -145,27 +145,26 @@
     </main>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+       document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-            // 入力値の検証
-            if (!email || !password) {
-                alert('メールアドレスとパスワードを入力してください');
-                return;
-            }
+    // 入力値の検証
+    if (!email || !password) {
+        alert('メールアドレスとパスワードを入力してください');
+        return;
+    }
 
-            // メールアドレスの形式チェック
-            if (!email.includes('@')) {
-                alert('正しいメールアドレスを入力してください');
-                return;
-            }
-
-            // ログイン処理（現在はモック）
-            alert('ログイン機能は現在開発中です。\n\n入力された情報：\nメール：' + email);
-        });
+    // ログイン実行
+    if (auth.login(email, password)) {
+        // ログイン成功
+        window.location.href = 'mypage.html';
+    } else {
+        alert('ログインに失敗しました');
+    }
+});
     </script>
 </body>
 </html>
