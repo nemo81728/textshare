@@ -177,46 +177,46 @@
         </div>
     </main>
 
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+ <script>
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
 
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const university = document.getElementById('university').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const university = document.getElementById('university').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
 
-            // 入力値の検証
-            if (!name || !email || !university || !password || !confirmPassword) {
-                alert('全ての項目を入力してください');
-                return;
-            }
+        // 入力値の検証
+        if (!name || !email || !university || !password || !confirmPassword) {
+            alert('全ての項目を入力してください');
+            return;
+        }
 
-            // メールアドレスの形式チェック
-            if (!email.includes('@')) {
-                alert('正しいメールアドレスを入力してください');
-                return;
-            }
+        // メールアドレスの形式チェック
+        if (!email.includes('@')) {
+            alert('正しいメールアドレスを入力してください');
+            return;
+        }
 
-            // パスワードの一致確認
-            if (password !== confirmPassword) {
-                alert('パスワードが一致しません');
-                return;
-            }
+        // パスワードの一致確認
+        if (password !== confirmPassword) {
+            alert('パスワードが一致しません');
+            return;
+        }
 
-            // パスワードの長さチェック
-            if (password.length < 8) {
-                alert('パスワードは8文字以上にしてください');
-                return;
-            }
+        // パスワードの長さチェック
+        if (password.length < 8) {
+            alert('パスワードは8文字以上にしてください');
+            return;
+        }
 
-            // 登録処理（現在はモック）
-            alert('登録機能は現在開発中です。\n\n入力された情報：\n' + 
-                  '名前：' + name + '\n' +
-                  'メール：' + email + '\n' +
-                  '大学：' + university);
-        });
-    </script>
+        // 登録処理（現在はモック）
+        alert('登録機能は現在開発中です。\n\n入力された情報：\n' + 
+              '名前：' + name + '\n' +
+              'メール：' + email + '\n' +
+              '大学：' + university);
+    });
+</script>
 </body>
 </html>
