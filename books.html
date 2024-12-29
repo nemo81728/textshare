@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教科書一覧 - TextShare</title>
+    <title>メッセージ - TextShare</title>
     <style>
         * {
             margin: 0;
@@ -39,134 +39,191 @@
             text-decoration: none;
         }
 
-        .container {
+        .messages-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 1rem;
-        }
-
-        .search-container {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .search-box {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .filter-group {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        select {
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 1rem;
-            min-width: 150px;
-        }
-
-        .books-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-            padding: 1rem 0;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 120px);
         }
 
-        .book-card {
+        .conversation-list {
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             overflow: hidden;
-            transition: transform 0.2s;
+        }
+
+        .conversation-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .conversation-item:hover {
+            background: #f9fafb;
+        }
+
+        .conversation-item.active {
+            background: #ebf5ff;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #4b5563;
+        }
+
+        .conversation-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .timestamp {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .last-message {
+            color: #6b7280;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
 
-        .book-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .book-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: #f3f4f6;
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .book-info {
             padding: 1rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .book-title {
             font-weight: bold;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .book-details {
-            color: #6b7280;
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-            flex-grow: 1;
-        }
-
-        .book-details p {
             margin-bottom: 0.25rem;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 0.5rem 1rem;
+        .book-details {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            max-width: 80%;
+        }
+
+        .message.sent {
+            flex-direction: row-reverse;
+            align-self: flex-end;
+        }
+
+        .message-bubble {
+            padding: 0.75rem;
+            border-radius: 8px;
+            background: #f3f4f6;
+        }
+
+        .message.sent .message-bubble {
             background: #2563eb;
             color: white;
-            text-decoration: none;
+        }
+
+        .message-input-container {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
             border-radius: 4px;
-            font-size: 0.875rem;
-            transition: background-color 0.3s;
-            text-align: center;
+            resize: none;
+            height: 45px;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: #2563eb;
+            color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
-            width: 100%;
+            transition: background-color 0.3s;
         }
 
         .btn:hover {
             background: #1d4ed8;
         }
 
-        .no-results {
-            text-align: center;
-            padding: 2rem;
-            background: white;
-            border-radius: 8px;
-            color: #6b7280;
-        }
-
-        @media (max-width: 640px) {
-            .filter-group {
-                flex-direction: column;
+        @media (max-width: 768px) {
+            .messages-container {
+                grid-template-columns: 1fr;
             }
-            
-            select {
-                width: 100%;
+            .conversation-list {
+                display: none;
+            }
+            .conversation-list.active {
+                display: block;
+            }
+            .chat-container {
+                display: none;
+            }
+            .chat-container.active {
+                display: flex;
             }
         }
     </style>
@@ -175,142 +232,198 @@
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="logo">TextShare</a>
-            <a href="book-register.html" class="btn" style="width: auto;">教科書を登録</a>
+            <a href="mypage.html" class="btn">マイページ</a>
         </div>
     </header>
 
-    <div class="container">
-        <div class="search-container">
-            <div class="search-box">
-                <input 
-                    type="text" 
-                    class="search-input" 
-                    id="searchInput"
-                    placeholder="教科書名、著者名で検索">
-            </div>
-            <div class="filter-group">
-                <select id="departmentFilter">
-                    <option value="">学部を選択</option>
-                    <option value="literature">文学部</option>
-                    <option value="economics">経済学部</option>
-                    <option value="science">理学部</option>
-                    <option value="engineering">工学部</option>
-                </select>
-                <select id="conditionFilter">
-                    <option value="">状態を選択</option>
-                    <option value="new">新品同様</option>
-                    <option value="good">良好</option>
-                    <option value="fair">普通</option>
-                </select>
-            </div>
+    <div class="messages-container">
+        <div class="conversation-list" id="conversationList">
+            <!-- 会話リストは動的に生成 -->
         </div>
-
-        <div class="books-grid" id="booksGrid">
-            <!-- 教科書カードはJavaScriptで動的に生成 -->
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <div class="avatar" id="chatAvatar"></div>
+                <div class="user-name" id="chatUserName"></div>
+            </div>
+            
+            <div class="book-info" id="bookInfo">
+                <!-- 教科書情報は動的に生成 -->
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- メッセージは動的に生成 -->
+            </div>
+            
+            <div class="message-input-container">
+                <textarea 
+                    class="message-input" 
+                    id="messageInput"
+                    placeholder="メッセージを入力"
+                    maxlength="1000"></textarea>
+                <button class="btn" onclick="sendMessage()">送信</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // サンプルデータ（実際はAPIから取得）
-        const books = [
+        // サンプルデータ
+        const conversations = [
             {
                 id: 1,
-                title: '経済学入門 第3版',
-                author: '山田太郎',
-                department: 'economics',
-                departmentName: '経済学部',
-                condition: 'good',
-                conditionName: '良好',
-                wishlist: 'ミクロ経済学',
-                image: '/api/placeholder/250/200'
+                user: {
+                    name: '田中太郎',
+                    avatar: '田'
+                },
+                book: {
+                    title: '経済学入門 第3版',
+                    department: '経済学部',
+                    condition: '良好'
+                },
+                lastMessage: '交換可能でしょうか？',
+                timestamp: '14:30',
+                messages: [
+                    {
+                        sent: false,
+                        text: 'こんにちは。経済学入門の教科書の交換を希望しています。',
+                        time: '14:25'
+                    },
+                    {
+                        sent: false,
+                        text: '状態は良好とのことですが、書き込みなどはありますか？',
+                        time: '14:25'
+                    },
+                    {
+                        sent: true,
+                        text: 'こんにちは。はい、交換可能です。書き込みは最小限で、赤ペンでの下線が数か所あります。',
+                        time: '14:28'
+                    },
+                    {
+                        sent: false,
+                        text: 'ありがとうございます。それでは交換をお願いできますか？',
+                        time: '14:30'
+                    }
+                ]
             },
             {
                 id: 2,
-                title: '線形代数学',
-                author: '鈴木一郎',
-                department: 'science',
-                departmentName: '理学部',
-                condition: 'new',
-                conditionName: '新品同様',
-                wishlist: '微分積分学',
-                image: '/api/placeholder/250/200'
-            },
-            {
-                id: 3,
-                title: '日本文学史概説',
-                author: '佐藤花子',
-                department: 'literature',
-                departmentName: '文学部',
-                condition: 'fair',
-                conditionName: '普通',
-                wishlist: '古典文学講読',
-                image: '/api/placeholder/250/200'
+                user: {
+                    name: '山田花子',
+                    avatar: '山'
+                },
+                book: {
+                    title: '線形代数学',
+                    department: '理学部',
+                    condition: '新品同様'
+                },
+                lastMessage: 'ありがとうございました！',
+                timestamp: '13:15',
+                messages: []
             }
         ];
 
-        // 教科書カードのHTML生成
-        function createBookCard(book) {
-            return `
-                <div class="book-card">
-                    <img src="${book.image}" alt="${book.title}" class="book-image">
-                    <div class="book-info">
-                        <h3 class="book-title">${book.title}</h3>
-                        <div class="book-details">
-                            <p>著者：${book.author}</p>
-                            <p>学部：${book.departmentName}</p>
-                            <p>状態：${book.conditionName}</p>
-                            <p>希望：${book.wishlist}</p>
+        let activeConversation = null;
+
+        // 会話リストの生成
+        function renderConversationList() {
+            const list = document.getElementById('conversationList');
+            list.innerHTML = conversations.map(conv => `
+                <div class="conversation-item ${activeConversation?.id === conv.id ? 'active' : ''}" 
+                     onclick="showConversation(${conv.id})">
+                    <div class="avatar">${conv.user.avatar}</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="user-name">${conv.user.name}</span>
+                            <span class="timestamp">${conv.timestamp}</span>
                         </div>
-                        <button class="btn" onclick="sendMessage(${book.id})">
-                            メッセージを送る
-                        </button>
+                        <div class="last-message">${conv.lastMessage}</div>
                     </div>
                 </div>
-            `;
+            `).join('');
         }
 
-        // 検索とフィルタリング
-        function filterBooks() {
-            const searchText = document.getElementById('searchInput').value.toLowerCase();
-            const department = document.getElementById('departmentFilter').value;
-            const condition = document.getElementById('conditionFilter').value;
-
-            const filteredBooks = books.filter(book => {
-                const matchesSearch = book.title.toLowerCase().includes(searchText) || 
-                                    book.author.toLowerCase().includes(searchText);
-                const matchesDepartment = !department || book.department === department;
-                const matchesCondition = !condition || book.condition === condition;
-
-                return matchesSearch && matchesDepartment && matchesCondition;
-            });
-
-            displayBooks(filteredBooks);
-        }
-
-        // 教科書一覧の表示
-        function displayBooks(booksToShow) {
-            const grid = document.getElementById('booksGrid');
-            if (booksToShow.length === 0) {
-                grid.innerHTML = '<div class="no-results">該当する教科書が見つかりません</div>';
+        // チャット表示の更新
+        function updateChatView() {
+            if (!activeConversation) {
+                document.getElementById('chatContainer').style.display = 'none';
                 return;
             }
 
-            grid.innerHTML = booksToShow.map(book => createBookCard(book)).join('');
+            document.getElementById('chatContainer').style.display = 'flex';
+            document.getElementById('chatAvatar').textContent = activeConversation.user.avatar;
+            document.getElementById('chatUserName').textContent = activeConversation.user.name;
+            
+            document.getElementById('bookInfo').innerHTML = `
+                <div class="book-title">${activeConversation.book.title}</div>
+                <div class="book-details">
+                    <div>学部：${activeConversation.book.department}</div>
+                    <div>状態：${activeConversation.book.condition}</div>
+                </div>
+            `;
+
+            const messages = document.getElementById('chatMessages');
+            messages.innerHTML = activeConversation.messages.map(msg => `
+                <div class="message ${msg.sent ? 'sent' : ''}">
+                    <div class="avatar">${msg.sent ? 'あ' : activeConversation.user.avatar}</div>
+                    <div class="message-bubble">
+                        ${msg.text}
+                        <div class="timestamp" style="font-size: 0.75rem; color: ${msg.sent ? '#fff' : '#6b7280'}">
+                            ${msg.time}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            messages.scrollTop = messages.scrollHeight;
         }
 
-        // メッセージ送信（現在はモック）
-        function sendMessage(bookId) {
-            const book = books.find(b => b.id === bookId);
-            alert(`「${book.title}」の取引メッセージ機能は現在開発中です。`);
+        // 会話の表示
+        function showConversation(id) {
+            const conv = conversations.find(c => c.id === id);
+            if (conv) {
+                activeConversation = conv;
+                renderConversationList();
+                updateChatView();
+            }
         }
 
-        // イベントリスナーの設定
-        document.getElementById('searchInput').addEventListener('input', filterBooks);
-        document.getElementById('departmentFilter').addEventListener('change', filterBooks);
-        document.getElementById('conditionFilter').addEventListener('change', filterBooks);
+        // メッセージ送信
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text || !activeConversation) return;
+            
+            const now = new Date();
+            const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+            
+            activeConversation.messages.push({
+                sent: true,
+                text: text,
+                time: time
+            });
+            
+            activeConversation.lastMessage = text;
+            activeConversation.timestamp = time;
+            
+            input.value = '';
+            renderConversationList();
+            updateChatView();
+        }
+
+        // Enter キーでメッセージ送信
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
 
         // 初期表示
-        displayBooks(books);
+        renderConversationList();
+        if (conversations.length > 0) {
+            showConversation(conversations[0].id);
+        }
     </script>
 </body>
 </html>
