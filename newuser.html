@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新規登録 - TextShare</title>
+    <title>TextShare - 大学教科書交換サイト</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +14,6 @@
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
-            background: #f8fafc;
         }
 
         .header {
@@ -26,6 +25,9 @@
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .logo {
@@ -35,80 +37,137 @@
             text-decoration: none;
         }
 
-        .register-container {
-            max-width: 400px;
-            margin: 4rem auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: #1f2937;
-            margin-bottom: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #4b5563;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
         }
 
         .btn {
-            width: 100%;
-            padding: 0.75rem;
-            background: #2563eb;
-            color: white;
-            border: none;
+            padding: 0.5rem 1rem;
             border-radius: 4px;
-            font-size: 1rem;
-            cursor: pointer;
+            text-decoration: none;
             transition: background-color 0.3s;
         }
 
-        .btn:hover {
-            background: #1d4ed8;
-        }
-
-        .help-text {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: #6b7280;
-        }
-
-        .help-text a {
+        .btn-outline {
             color: #2563eb;
-            text-decoration: none;
         }
 
-        .help-text a:hover {
-            text-decoration: underline;
+        .btn-outline:hover {
+            background-color: #ebf5ff;
         }
 
-        .error {
-            color: #dc2626;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        .hero {
+            background: linear-gradient(to right, #2563eb, #60a5fa);
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .features {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 1rem;
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+        }
+
+        .steps {
+            background: #f8fafc;
+            padding: 4rem 1rem;
+        }
+
+        .steps h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .steps-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .step-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-weight: bold;
+        }
+
+        .footer {
+            background: #1f2937;
+            color: #9ca3af;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .features-grid, .steps-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -116,96 +175,70 @@
     <header class="header">
         <div class="header-content">
             <a href="/" class="logo">TextShare</a>
+            <nav class="nav-buttons">
+                <a href="/login.html" class="btn btn-outline">ログイン</a>
+                <a href="/register.html" class="btn btn-primary">新規登録</a>
+            </nav>
         </div>
     </header>
 
     <main>
-        <div class="register-container">
-            <h1>新規登録</h1>
-            <form id="registerForm">
-                <div class="form-group">
-                    <label for="name">名前</label>
-                    <input 
-                        type="text" 
-                        id="name" 
-                        name="name" 
-                        required
-                        placeholder="山田太郎">
+        <section class="hero">
+            <h1>大学の教科書を、もっと手軽に。</h1>
+            <p>使い終わった教科書を交換して、新しい学びを始めよう。</p>
+            <a href="/books.html" class="btn btn-primary">教科書を探す</a>
+        </section>
+
+        <section class="features">
+            <h2>TextShareの特徴</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>簡単な交換プロセス</h3>
+                    <p>メッセージを送って交換の約束をするだけ。面倒な手続きは一切ありません。</p>
                 </div>
-                <div class="form-group">
-                    <label for="email">大学メールアドレス</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        required
-                        placeholder="university@example.com">
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>素早い教科書検索</h3>
+                    <p>学部・学科、科目名など、様々な条件で必要な教科書を見つけることができます。</p>
                 </div>
-                <div class="form-group">
-                    <label for="university">大学</label>
-                    <select id="university" name="university" required>
-                        <option value="">選択してください</option>
-                        <option value="tokyo">東京大学</option>
-                        <option value="waseda">早稲田大学</option>
-                        <option value="keio">慶應義塾大学</option>
-                        <option value="other">その他</option>
-                    </select>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>同じ大学の仲間と</h3>
+                    <p>同じ大学の学生同士で交換することで、確実に必要な教科書を入手できます。</p>
                 </div>
-                <div class="form-group">
-                    <label for="password">パスワード</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        required
-                        placeholder="••••••••">
-                    <div class="error" id="passwordError"></div>
+            </div>
+        </section>
+
+        <section class="steps">
+            <h2>使い方</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>アカウント作成</h3>
+                    <p>大学のメールアドレスで登録</p>
                 </div>
-                <div class="form-group">
-                    <label for="confirmPassword">パスワード（確認）</label>
-                    <input 
-                        type="password" 
-                        id="confirmPassword" 
-                        name="confirmPassword" 
-                        required
-                        placeholder="••••••••">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>教科書を登録</h3>
+                    <p>提供できる教科書の情報を入力</p>
                 </div>
-                <button type="submit" class="btn">登録する</button>
-            </form>
-            <p class="help-text">
-                すでにアカウントをお持ちの方は<a href="/login.html">ログイン</a>
-            </p>
-        </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>教科書を探す</h3>
+                    <p>必要な教科書を検索</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>メッセージで交換</h3>
+                    <p>相手とやり取りして交換を約束</p>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const university = document.getElementById('university').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            // パスワード確認
-            if (password !== confirmPassword) {
-                document.getElementById('passwordError').textContent = 'パスワードが一致しません';
-                return;
-            }
-
-            // パスワードの強度チェック
-            if (password.length < 8) {
-                document.getElementById('passwordError').textContent = 'パスワードは8文字以上必要です';
-                return;
-            }
-
-            // ここに登録処理を実装
-            console.log('Register attempt:', { name, email, university });
-            
-            // バックエンドAPIとの連携は後ほど実装
-            alert('登録処理は現在実装中です');
-        });
-    </script>
+    <footer class="footer">
+        <p>&copy; 2024 TextShare All rights reserved.</p>
+    </footer>
 </body>
 </html>
