@@ -411,5 +411,11 @@
         // 初期表示
         displayBooks();
     </script>
+    <script>
+    // ページ読み込み時に認証チェック
+    document.addEventListener('DOMContentLoaded', () => {
+        auth.requireAuth();
+    });
+</script>
 </body>
 </html>
