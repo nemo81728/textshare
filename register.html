@@ -115,16 +115,16 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <a href="/" class="logo">TextShare</a>
+            <a href="index.html" class="logo">TextShare</a>
         </div>
     </header>
 
     <main>
         <div class="register-container">
             <h1>新規登録</h1>
-            <form id="registerForm">
+            <form id="registerForm" novalidate>
                 <div class="form-group">
-                    <label for="name">名前</label>
+                    <label for="name">名前 *</label>
                     <input 
                         type="text" 
                         id="name" 
@@ -133,7 +133,7 @@
                         placeholder="山田太郎">
                 </div>
                 <div class="form-group">
-                    <label for="email">大学メールアドレス</label>
+                    <label for="email">大学メールアドレス *</label>
                     <input 
                         type="email" 
                         id="email" 
@@ -142,7 +142,7 @@
                         placeholder="university@example.com">
                 </div>
                 <div class="form-group">
-                    <label for="university">大学</label>
+                    <label for="university">大学 *</label>
                     <select id="university" name="university" required>
                         <option value="">選択してください</option>
                         <option value="tokyo">東京大学</option>
@@ -152,28 +152,27 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="password">パスワード</label>
+                    <label for="password">パスワード *</label>
                     <input 
                         type="password" 
                         id="password" 
                         name="password" 
                         required
-                        placeholder="••••••••">
-                    <div class="error" id="passwordError"></div>
+                        placeholder="8文字以上で入力">
                 </div>
                 <div class="form-group">
-                    <label for="confirmPassword">パスワード（確認）</label>
+                    <label for="confirmPassword">パスワード（確認） *</label>
                     <input 
                         type="password" 
                         id="confirmPassword" 
                         name="confirmPassword" 
                         required
-                        placeholder="••••••••">
+                        placeholder="もう一度入力">
                 </div>
                 <button type="submit" class="btn">登録する</button>
             </form>
             <p class="help-text">
-                すでにアカウントをお持ちの方は<a href="/login.html">ログイン</a>
+                すでにアカウントをお持ちの方は<a href="login.html">ログイン</a>
             </p>
         </div>
     </main>
@@ -181,30 +180,42 @@
     <script>
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const university = document.getElementById('university').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
-            // パスワード確認
+            // 入力値の検証
+            if (!name || !email || !university || !password || !confirmPassword) {
+                alert('全ての項目を入力してください');
+                return;
+            }
+
+            // メールアドレスの形式チェック
+            if (!email.includes('@')) {
+                alert('正しいメールアドレスを入力してください');
+                return;
+            }
+
+            // パスワードの一致確認
             if (password !== confirmPassword) {
-                document.getElementById('passwordError').textContent = 'パスワードが一致しません';
+                alert('パスワードが一致しません');
                 return;
             }
 
-            // パスワードの強度チェック
+            // パスワードの長さチェック
             if (password.length < 8) {
-                document.getElementById('passwordError').textContent = 'パスワードは8文字以上必要です';
+                alert('パスワードは8文字以上にしてください');
                 return;
             }
 
-            // ここに登録処理を実装
-            console.log('Register attempt:', { name, email, university });
-            
-            // バックエンドAPIとの連携は後ほど実装
-            alert('登録処理は現在実装中です');
+            // 登録処理（現在はモック）
+            alert('登録機能は現在開発中です。\n\n入力された情報：\n' + 
+                  '名前：' + name + '\n' +
+                  'メール：' + email + '\n' +
+                  '大学：' + university);
         });
     </script>
 </body>
