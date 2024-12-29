@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規登録 - TextShare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            background: #f8fafc;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            color: #2563eb;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .register-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1f2937;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .help-text {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6b7280;
+        }
+
+        .help-text a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .help-text a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">TextShare</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="register-container">
+            <h1>新規登録</h1>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="name">名前</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        required
+                        placeholder="山田太郎">
+                </div>
+                <div class="form-group">
+                    <label for="email">大学メールアドレス</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required
+                        placeholder="university@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="university">大学</label>
+                    <select id="university" name="university" required>
+                        <option value="">選択してください</option>
+                        <option value="tokyo">東京大学</option>
+                        <option value="waseda">早稲田大学</option>
+                        <option value="keio">慶應義塾大学</option>
+                        <option value="other">その他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="password">パスワード</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required
+                        placeholder="••••••••">
+                    <div class="error" id="passwordError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">パスワード（確認）</label>
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        required
+                        placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn">登録する</button>
+            </form>
+            <p class="help-text">
+                すでにアカウントをお持ちの方は<a href="/login.html">ログイン</a>
+            </p>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const university = document.getElementById('university').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // パスワード確認
+            if (password !== confirmPassword) {
+                document.getElementById('passwordError').textContent = 'パスワードが一致しません';
+                return;
+            }
+
+            // パスワードの強度チェック
+            if (password.length < 8) {
+                document.getElementById('passwordError').textContent = 'パスワードは8文字以上必要です';
+                return;
+            }
+
+            // ここに登録処理を実装
+            console.log('Register attempt:', { name, email, university });
+            
+            // バックエンドAPIとの連携は後ほど実装
+            alert('登録処理は現在実装中です');
+        });
+    </script>
+</body>
+</html>

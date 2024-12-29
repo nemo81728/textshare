@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイページ - TextShare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            background: #f8fafc;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #2563eb;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .mypage-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: #4b5563;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.75rem;
+            color: #4b5563;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .book-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .book-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background: #f3f4f6;
+        }
+
+        .book-info {
+            padding: 1rem;
+        }
+
+        .book-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-details {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #2563eb;
+            border: 1px solid #2563eb;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-outline:hover {
+            background: #f3f4f6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .mypage-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">TextShare</a>
+            <a href="/messages.html" class="btn">メッセージ</a>
+        </div>
+    </header>
+
+    <main class="mypage-container">
+        <aside class="sidebar">
+            <div class="profile">
+                <div class="avatar">山</div>
+                <h2>山田太郎</h2>
+                <p>東京大学</p>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">登録した教科書</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">交換履歴</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">プロフィール設定</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="content">
+            <h2 class="section-title">登録した教科書</h2>
+            <div class="books-grid">
+                <div class="book-card">
+                    <img src="/api/placeholder/200/150" alt="経済学入門" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-title">経済学入門 第3版</h3>
+                        <div class="book-details">
+                            <p>経済学部</p>
+                            <p>状態：良好</p>
+                        </div>
+                        <div class="action-buttons">
+                            <a href="#" class="btn btn-outline">編集</a>
+                            <a href="#" class="btn">削除</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <img src="/api/placeholder/200/150" alt="線形代数学" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-title">線形代数学</h3>
+                        <div class="book-details">
+                            <p>理学部</p>
+                            <p>状態：新品同様</p>
+                        </div>
+                        <div class="action-buttons">
+                            <a href="#" class="btn btn-outline">編集</a>
+                            <a href="#" class="btn">削除</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('.nav-link.active').classList.remove('active');
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

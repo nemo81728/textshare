@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教科書一覧 - TextShare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            background: #f8fafc;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #2563eb;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .search-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        select {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .books-grid {
+            max-width: 1200px;
+            margin: 2rem auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 0 1rem;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .book-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f3f4f6;
+        }
+
+        .book-info {
+            padding: 1rem;
+        }
+
+        .book-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-details {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 640px) {
+            .filter-group {
+                flex-direction: column;
+            }
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">TextShare</a>
+            <a href="/mypage.html" class="btn">マイページ</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="search-container">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="教科書名、科目名で検索">
+            </div>
+            <div class="filter-group">
+                <select>
+                    <option value="">学部を選択</option>
+                    <option value="literature">文学部</option>
+                    <option value="economics">経済学部</option>
+                    <option value="science">理学部</option>
+                </select>
+                <select>
+                    <option value="">状態を選択</option>
+                    <option value="new">新品同様</option>
+                    <option value="good">良好</option>
+                    <option value="fair">普通</option>
+                </select>
+                <select>
+                    <option value="">大学を選択</option>
+                    <option value="tokyo">東京大学</option>
+                    <option value="waseda">早稲田大学</option>
+                    <option value="keio">慶應義塾大学</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="books-grid">
+            <!-- サンプルの教科書カード -->
+            <div class="book-card">
+                <img src="/api/placeholder/250/200" alt="経済学入門" class="book-image">
+                <div class="book-info">
+                    <h3 class="book-title">経済学入門 第3版</h3>
+                    <div class="book-details">
+                        <p>経済学部</p>
+                        <p>状態：良好</p>
+                        <p>希望交換：ミクロ経済学</p>
+                    </div>
+                    <a href="#" class="btn">メッセージを送る</a>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <img src="/api/placeholder/250/200" alt="線形代数学" class="book-image">
+                <div class="book-info">
+                    <h3 class="book-title">線形代数学</h3>
+                    <div class="book-details">
+                        <p>理学部</p>
+                        <p>状態：新品同様</p>
+                        <p>希望交換：微分積分学</p>
+                    </div>
+                    <a href="#" class="btn">メッセージを送る</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 検索機能の実装（後ほど）
+        document.querySelector('.search-input').addEventListener('input', function(e) {
+            console.log('Search query:', e.target.value);
+        });
+
+        // フィルター機能の実装（後ほど）
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', function(e) {
+                console.log('Filter changed:', e.target.value);
+            });
+        });
+    </script>
+</body>
+</html>

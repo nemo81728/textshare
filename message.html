@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メッセージ - TextShare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            background: #f8fafc;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #2563eb;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .messages-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .conversation-list {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .conversation-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .conversation-item:hover {
+            background: #f9fafb;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #4b5563;
+        }
+
+        .conversation-content {
+            flex: 1;
+        }
+
+        .conversation-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .timestamp {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .book-title {
+            font-size: 0.875rem;
+            color: #4b5563;
+            margin-bottom: 0.25rem;
+        }
+
+        .last-message {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .message-detail {
+            display: none;
+            margin-top: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .messages {
+            margin-bottom: 1.5rem;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .message.received .message-bubble {
+            background: #f3f4f6;
+        }
+
+        .message.sent {
+            flex-direction: row-reverse;
+        }
+
+        .message.sent .message-bubble {
+            background: #2563eb;
+            color: white;
+        }
+
+        .message-form {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">TextShare</a>
+            <a href="/mypage.html" class="btn">マイページ</a>
+        </div>
+    </header>
+
+    <main class="messages-container">
+        <div class="conversation-list">
+            <div class="conversation-item" onclick="showConversation(1)">
+                <div class="avatar">田</div>
+                <div class="conversation-content">
+                    <div class="conversation-header">
+                        <span class="user-name">田中太郎</span>
+                        <span class="timestamp">2024/03/25 14:30</span>
+                    </div>
+                    <div class="book-title">経済学入門 第3版</div>
+                    <div class="last-message">交換可能でしょうか？</div>
+                </div>
+            </div>
+
+            <div class="conversation-item" onclick="showConversation(2)">
+                <div class="avatar">山</div>
+                <div class="conversation-content">
+                    <div class="conversation-header">
+                        <span class="user-name">山田花子</span>
+                        <span class="timestamp">2024/03/24 16:15</span>
+                    </div>
+                    <div class="book-title">線形代数学</div>
+                    <div class="last-message">ありがとうございました！</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="messageDetail" class="message-detail">
+            <div class="message-header">
+                <div class="avatar">田</div>
+                <div>
+                    <div class="user-name">田中太郎</div>
+                    <div class="book-title">経済学入門 第3版</div>
+                </div>
+            </div>
+
+            <div class="messages">
+                <div class="message received">
+                    <div class="avatar">田</div>
+                    <div class="message-bubble">
+                        こんにちは。経済学入門の教科書の交換を希望しています。
+                    </div>
+                </div>
+                <div class="message sent">
+                    <div class="message-bubble">
+                        はい、交換可能です。どの教科書と交換希望ですか？
+                    </div>
+                </div>
+            </div>
+
+            <form class="message-form" onsubmit="return sendMessage(event)">
+                <input type="text" class="message-input" placeholder="メッセージを入力">
+                <button type="submit" class="btn">送信</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        function showConversation(id) {
+            document.getElementById('messageDetail').style.display = 'block';
+        }
+
+        function sendMessage(event) {
+            event.preventDefault();
+            const input = event.target.querySelector('.message-input');
+            console.log('Message sent:', input.value);
+            input.value = '';
+            return false;
+        }
+    </script>
+</body>
+</html>
