@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者ダッシュボード - TextShare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            background: #f8fafc;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #2563eb;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .container {
+            display: flex;
+            padding-top: 64px;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            position: fixed;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.75rem;
+            color: #4b5563;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-title {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+            font-weight: 500;
+            color: #4b5563;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-suspended {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-resolved {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #2563eb;
+            border: 1px solid #2563eb;
+        }
+
+        .btn-outline:hover {
+            background: #f3f4f6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-box {
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script src="auth.js"></script>
+    <script src="admin.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">TextShare 管理画面</a>
+            <button class="btn btn-outline" onclick="auth.logout()">ログアウト</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#dashboard" class="nav-link active" onclick="showSection('dashboard')">
+                            ダッシュボード
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#users" class="nav-link" onclick="showSection('users')">
+                            ユーザー管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#reports" class="nav-link" onclick="showSection('reports')">
+                            違反報告
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#logs" class="nav-link" onclick="showSection('logs')">
+                            管理ログ
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <!-- ダッシュボード -->
+            <div id="dashboardSection">
+                <h2 class="section-title">ダッシュボード</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-title">総ユーザー数</div>
+                        <div class="stat-value" id="totalUsers">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">アクティブユーザー</div>
+                        <div class="stat-value" id="activeUsers">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">登録教科書数</div>
+                        <div class="stat-value" id="totalBooks">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">交換成立数</div>
+                        <div class="stat-value" id="totalExchanges">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ユーザー管理 -->
+            <div id="usersSection" style="display: none;">
+                <h2 class="section-title">ユーザー管理</h2>
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        placeholder="ユーザー名やメールアドレスで検索"
+                        onkeyup="filterUsers(this.value)">
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>名前</th>
+                                <th>メールアドレス</th>
+                                <th>大学</th>
+                                <th>状態</th>
+                                <th>登録日</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersList">
+                            <!-- ユーザーリストはJavaScriptで動的に生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 違反報告 -->
+            <div id="reportsSection" style="display: none;">
+                <h2 class="section-title">違反報告</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>報告ID</th>
+                                <th>報告者</th>
+                                <th>報告対象</th>
+                                <th>種類</th>
+                                <th>状態</th>
+                                <th>報告日時</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsList">
+                            <!-- 違反報告リストはJavaScriptで動的に生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 管理ログ -->
+            <div id="logsSection" style="display: none;">
+                <h2 class="section-title">管理ログ</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>日時</th>
+                                <th>管理者</th>
+                                <th>操作</th>
+                                <th>対象</th>
+                                <th>詳細</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logsList">
+                            <!-- 管理ログはJavaScriptで動的に生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // セクションの表示切り替え
+        function showSection(sectionId) {
+            document.querySelectorAll('.main-content > div').forEach(div => {
+                div.style.display = 'none';
+            });
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            document.getElementById(sectionId + 'Section').style.display = 'block';
+            document.querySelector(`[href="#${sectionId}"]`).classList.add('active');
+
+            // セクションに応じたデータ読み込み
+            switch(sectionId) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'reports':
+                    loadReports();
+                    break;
+                case 'logs':
+                    loadLogs();
+                    break;
+            }
+        }
+
+        // ダッシュボードの読み込み
+        function loadDashboard() {
+            const stats = admin.getStatistics();
+            document.getElementById('totalUsers').textContent = stats.totalUsers;
+            document.getElementById('activeUsers').textContent = stats.activeUsers;
+            document.getElementById('totalBooks').textContent = stats.totalBooks;
+            document.getElementById('totalExchanges').textContent = stats.totalExchanges;
+        }
+
+        // ユーザーリストの読み込み
+        function loadUsers() {
+            const users = admin.getUsers();
+            const tbody = document.getElementById('usersList');
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.university}</td>
+                    <td>
+                        <span class="status-badge status-${user.status}">
+                            ${user.status === 'active' ? '有効' : '停止中'}
+                        </span>
+                    </td>
+                    <td>${user.registeredAt}</td>
+                    <td class="action-buttons">
+                        <button class="btn btn-outline" onclick="viewUserDetails(${user.id})">
+                            詳細
+                        </button>
+                        <button class="btn ${user.status === 'active' ? 'btn-danger' : 'btn'}"
+                                onclick="toggleUserStatus(${user.id}, '${user.status}')">
+                            ${user.status === 'active' ? '停止' : '復帰'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 違反報告の読み込み
+        function loadReports() {
+            const reports = admin.getReports();
+            const tbody = document.getElementById('reportsList');
+            tbody.innerHTML = reports.map(report => `
+                <tr>
+                    <td>${report.id}</td>
+                   <td>${report.reporterId}</td>
+                    <td>${report.reportedUserId}</td>
+                    <td>${getReportTypeName(report.type)}</td>
+                    <td>
+                        <span class="status-badge status-${report.status}">
+                            ${report.status === 'pending' ? '対応待ち' : '対応済み'}
+                        </span>
+                    </td>
+                    <td>${report.createdAt}</td>
+                    <td class="action-buttons">
+                        ${report.status === 'pending' ? `
+                            <button class="btn" onclick="handleReport(${report.id}, 'resolve')">
+                                対応済みにする
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 管理ログの読み込み
+        function loadLogs() {
+            const logs = admin.getAdminLogs();
+            const tbody = document.getElementById('logsList');
+            tbody.innerHTML = logs.map(log => `
+                <tr>
+                    <td>${log.createdAt}</td>
+                    <td>${log.adminId}</td>
+                    <td>${getActionName(log.action)}</td>
+                    <td>${log.target}</td>
+                    <td>${log.description}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ユーザーの詳細表示
+        function viewUserDetails(userId) {
+            const user = admin.getUserDetails(userId);
+            // ここでモーダルウィンドウなどで詳細を表示
+            alert(`
+                ユーザー詳細:
+                ID: ${user.id}
+                名前: ${user.name}
+                メール: ${user.email}
+                大学: ${user.university}
+                登録教科書数: ${user.registeredBooks}
+                取引完了数: ${user.completedExchanges}
+                違反報告数: ${user.reportCount}
+                最終ログイン: ${user.lastLogin}
+            `);
+        }
+
+        // ユーザーの状態を切り替え
+        function toggleUserStatus(userId, currentStatus) {
+            const newStatus = currentStatus === 'active' ? 'suspended' : 'active';
+            const message = newStatus === 'suspended' ? 
+                'このユーザーを停止しますか？' : 
+                'このユーザーを復帰させますか？';
+            
+            if (confirm(message)) {
+                admin.updateUserStatus(userId, newStatus);
+                loadUsers(); // リストを更新
+            }
+        }
+
+        // 違反報告の対応
+        function handleReport(reportId, action) {
+            if (confirm('この報告を対応済みにしますか？')) {
+                admin.handleReport(reportId, action);
+                loadReports(); // リストを更新
+            }
+        }
+
+        // 違反報告種類の表示名を取得
+        function getReportTypeName(type) {
+            const types = {
+                'inappropriate_content': '不適切なコンテンツ',
+                'spam': 'スパム',
+                'harassment': 'ハラスメント',
+                'other': 'その他'
+            };
+            return types[type] || type;
+        }
+
+        // アクション名の表示名を取得
+        function getActionName(action) {
+            const actions = {
+                'user_suspended': 'ユーザー停止',
+                'user_activated': 'ユーザー復帰',
+                'report_resolved': '違反報告対応',
+                'other': 'その他'
+            };
+            return actions[action] || action;
+        }
+
+        // ユーザー検索
+        function filterUsers(keyword) {
+            if (!keyword) {
+                loadUsers();
+                return;
+            }
+
+            const users = admin.getUsers();
+            const filtered = users.filter(user => 
+                user.name.toLowerCase().includes(keyword.toLowerCase()) ||
+                user.email.toLowerCase().includes(keyword.toLowerCase())
+            );
+
+            const tbody = document.getElementById('usersList');
+            tbody.innerHTML = filtered.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.university}</td>
+                    <td>
+                        <span class="status-badge status-${user.status}">
+                            ${user.status === 'active' ? '有効' : '停止中'}
+                        </span>
+                    </td>
+                    <td>${user.registeredAt}</td>
+                    <td class="action-buttons">
+                        <button class="btn btn-outline" onclick="viewUserDetails(${user.id})">
+                            詳細
+                        </button>
+                        <button class="btn ${user.status === 'active' ? 'btn-danger' : 'btn'}"
+                                onclick="toggleUserStatus(${user.id}, '${user.status}')">
+                            ${user.status === 'active' ? '停止' : '復帰'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 初期表示
+        document.addEventListener('DOMContentLoaded', () => {
+            // 管理者権限チェック
+            if (!admin.requireAdmin()) {
+                return;
+            }
+            // ダッシュボードを表示
+            loadDashboard();
+        });
+    </script>
+</body>
+</html>
