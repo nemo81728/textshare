@@ -203,7 +203,6 @@
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
-
         .btn {
             padding: 0.75rem 1.5rem;
             background: #2563eb;
@@ -247,6 +246,29 @@
             color: #1d4ed8;
         }
 
+        .notification-container {
+            position: relative;
+            margin-left: 1rem;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+            color: #2563eb;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
             .messages-container {
                 grid-template-columns: 1fr;
@@ -265,13 +287,18 @@
     </style>
     <script src="auth.js"></script>
     <script src="exchange.js"></script>
-    </head>
+    <script src="notification.js"></script>
+</head>
 <body>
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="logo">TextShare</a>
-            <nav>
+            <nav style="display: flex; align-items: center;">
                 <a href="book-register.html" class="btn">教科書を登録</a>
+                <div class="notification-container">
+                    <div class="notification-icon">🔔</div>
+                    <span class="notification-count" id="notificationBadge">0</span>
+                </div>
             </nav>
         </div>
     </header>
@@ -305,8 +332,7 @@
             </div>
         </div>
     </div>
-
-    <script>
+<script>
         // サンプルデータ
         let activeConversation = null;
         const conversations = [
@@ -408,7 +434,7 @@
             `).join('');
             
             messages.scrollTop = messages.scrollHeight;
-
+            
             // 既存の交換状態を確認して表示
             updateExchangeStatus(activeConversation.book.id);
         }
@@ -442,30 +468,51 @@
             activeConversation.lastMessage = text;
             activeConversation.timestamp = time;
             
+            // 通知を追加
+            notification.addMessageNotification(activeConversation.user.name, text);
+            
             input.value = '';
             renderConversationList();
             updateChatView();
         }
 
-        // 交換リクエストを送信
+        // 交換リクエスト送信
         function sendExchangeRequest(bookId) {
             const message = prompt('交換リクエストメッセージを入力してください：');
             if (message) {
                 const result = exchange.sendRequest(bookId, message);
                 if (result) {
+                    // 交換リクエスト通知を追加
+                    notification.addExchangeRequestNotification(
+                        activeConversation.user.name, 
+                        activeConversation.book.title
+                    );
                     alert('交換リクエストを送信しました');
                     updateExchangeStatus(result.id);
                 }
             }
         }
 
-        // 交換状態を更新
+        // 交換状態の更新
         function updateExchangeStatus(exchangeId) {
             const status = exchange.exchanges.find(e => e.id === exchangeId);
             if (status) {
                 const statusElement = document.getElementById('exchangeStatus');
                 statusElement.textContent = `状態: ${exchange.getStatusLabel(status.status)}`;
                 statusElement.className = `exchange-status status-${status.status}`;
+
+                // 状態に応じて通知を追加
+                if (status.status === exchange.STATUS.ACCEPTED) {
+                    notification.addExchangeAcceptedNotification(
+                        activeConversation.user.name,
+                        activeConversation.book.title
+                    );
+                } else if (status.status === exchange.STATUS.REJECTED) {
+                    notification.addExchangeRejectedNotification(
+                        activeConversation.user.name,
+                        activeConversation.book.title
+                    );
+                }
             }
         }
 
@@ -484,6 +531,7 @@
                 showConversation(conversations[0].id);
             }
             renderConversationList();
+            notification.updateNotificationBadge();
         });
     </script>
 </body>
