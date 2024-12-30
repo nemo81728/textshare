@@ -22,6 +22,9 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             padding: 1rem;
             margin-bottom: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header-content {
@@ -72,18 +75,55 @@
             font-size: 1rem;
         }
 
+        .search-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
         .filter-group {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .sort-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .select-container {
+            position: relative;
         }
 
         select {
+            width: 100%;
             padding: 0.75rem;
             border: 1px solid #d1d5db;
             border-radius: 4px;
             font-size: 1rem;
-            min-width: 150px;
+            background: white;
+            appearance: none;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        .select-container::after {
+            content: '▼';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            pointer-events: none;
         }
 
         .books-grid {
@@ -105,6 +145,7 @@
 
         .book-card:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .book-image {
@@ -125,6 +166,7 @@
             font-weight: bold;
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
+            color: #1f2937;
         }
 
         .book-details {
@@ -138,9 +180,15 @@
             margin-bottom: 0.25rem;
         }
 
+        .book-price {
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 1rem;
+        }
+
         .btn {
             display: inline-block;
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1rem;
             background: #2563eb;
             color: white;
             text-decoration: none;
@@ -157,13 +205,13 @@
         }
 
         .btn-outline {
-            background: none;
+            background: white;
             color: #2563eb;
             border: 1px solid #2563eb;
         }
 
         .btn-outline:hover {
-            background: #ebf5ff;
+            background: #f3f4f6;
         }
 
         .no-results {
@@ -174,32 +222,25 @@
             color: #6b7280;
         }
 
+        .results-count {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
         @media (max-width: 640px) {
             .filter-group {
-                flex-direction: column;
-            }
-            
-            select {
-                width: 100%;
+                grid-template-columns: 1fr;
             }
 
-            .nav-buttons {
-                display: none;
-            }
-
-            .nav-buttons.active {
-                display: flex;
+            .sort-group {
                 flex-direction: column;
-                position: absolute;
-                top: 100%;
-                right: 0;
-                background: white;
-                padding: 1rem;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                gap: 1rem;
+                align-items: stretch;
             }
         }
     </style>
     <script src="auth.js"></script>
+    <script src="books.js"></script>
 </head>
 <body>
     <header class="header">
@@ -208,8 +249,7 @@
             <nav class="nav-buttons">
                 <a href="book-register.html" class="btn btn-outline">教科書を登録</a>
                 <a href="message.html" class="btn btn-outline">メッセージ</a>
-                <a href="login.html" class="btn btn-outline">ログイン</a>
-                <a href="register.html" class="btn btn-primary">新規登録</a>
+                <a href="mypage.html" class="btn btn-outline">マイページ</a>
             </nav>
         </div>
     </header>
@@ -224,129 +264,135 @@
                     placeholder="教科書名、著者名で検索">
             </div>
             <div class="filter-group">
-                <select id="departmentFilter">
-                    <option value="">学部を選択</option>
-                    <option value="literature">文学部</option>
-                    <option value="economics">経済学部</option>
-                    <option value="science">理学部</option>
-                    <option value="engineering">工学部</option>
-                </select>
-                <select id="conditionFilter">
-                    <option value="">状態を選択</option>
-                    <option value="new">新品同様</option>
-                    <option value="good">良好</option>
-                    <option value="fair">普通</option>
-                </select>
+                <div class="select-container">
+                    <select id="departmentFilter">
+                        <option value="">学部を選択</option>
+                    </select>
+                </div>
+                <div class="select-container">
+                    <select id="subjectFilter">
+                        <option value="">教科を選択</option>
+                    </select>
+                </div>
+                <div class="select-container">
+                    <select id="conditionFilter">
+                        <option value="">状態を選択</option>
+                    </select>
+                </div>
+            </div>
+            <div class="sort-group">
+                <div class="results-count">
+                    <span id="resultsCount">0</span>件の教科書が見つかりました
+                </div>
+                <div class="select-container" style="width: 200px;">
+                    <select id="sortSelect">
+                        <option value="">並び替え</option>
+                    </select>
+                </div>
             </div>
         </div>
 
         <div class="books-grid" id="booksGrid">
-            <!-- 教科書カードはJavaScriptで動的に生成 -->
+            <!-- 教科書リストは動的に生成 -->
         </div>
     </div>
 
     <script>
-        // サンプルデータ（実際はAPIから取得）
-        const books = [
-            {
-                id: 1,
-                title: '経済学入門 第3版',
-                author: '山田太郎',
-                department: 'economics',
-                departmentName: '経済学部',
-                condition: 'good',
-                conditionName: '良好',
-                wishlist: 'ミクロ経済学',
-                image: '/api/placeholder/250/200'
-            },
-            {
-                id: 2,
-                title: '線形代数学',
-                author: '鈴木一郎',
-                department: 'science',
-                departmentName: '理学部',
-                condition: 'new',
-                conditionName: '新品同様',
-                wishlist: '微分積分学',
-                image: '/api/placeholder/250/200'
-            },
-            {
-                id: 3,
-                title: '日本文学史概説',
-                author: '佐藤花子',
-                department: 'literature',
-                departmentName: '文学部',
-                condition: 'fair',
-                conditionName: '普通',
-                wishlist: '古典文学講読',
-                image: '/api/placeholder/250/200'
-            }
-        ];
+        // フィルターオプションの設定
+        function setupFilterOptions() {
+            // 学部フィルター
+            const departmentSelect = document.getElementById('departmentFilter');
+            bookManager.getDepartments().forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept.id;
+                option.textContent = dept.name;
+                departmentSelect.appendChild(option);
+            });
 
-        // 教科書カードのHTML生成
-        function createBookCard(book) {
-            return `
+            // 教科フィルター
+            const subjectSelect = document.getElementById('subjectFilter');
+            bookManager.getSubjects().forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.id;
+                option.textContent = subject.name;
+                subjectSelect.appendChild(option);
+            });
+
+            // 状態フィルター
+            const conditionSelect = document.getElementById('conditionFilter');
+            bookManager.getConditions().forEach(condition => {
+                const option = document.createElement('option');
+                option.value = condition.id;
+                option.textContent = condition.name;
+                conditionSelect.appendChild(option);
+            });
+
+            // 並び替えオプション
+            const sortSelect = document.getElementById('sortSelect');
+            bookManager.getSortOptions().forEach(sort => {
+                const option = document.createElement('option');
+                option.value = sort.id;
+                option.textContent = sort.name;
+                sortSelect.appendChild(option);
+            });
+        }
+
+        // 検索とフィルタリングの実行
+        function updateBooksList() {
+            const options = {
+                keyword: document.getElementById('searchInput').value,
+                department: document.getElementById('departmentFilter').value,
+                subject: document.getElementById('subjectFilter').value,
+                condition: document.getElementById('conditionFilter').value,
+                sort: document.getElementById('sortSelect').value
+            };
+
+            const filteredBooks = bookManager.filterBooks(options);
+            document.getElementById('resultsCount').textContent = filteredBooks.length;
+
+            const grid = document.getElementById('booksGrid');
+            if (filteredBooks.length === 0) {
+                grid.innerHTML = '<div class="no-results">該当する教科書が見つかりません</div>';
+                return;
+            }
+
+            grid.innerHTML = filteredBooks.map(book => `
                 <div class="book-card">
-                    <img src="${book.image}" alt="${book.title}" class="book-image">
+                    <img src="/api/placeholder/250/200" alt="${book.title}" class="book-image">
                     <div class="book-info">
                         <h3 class="book-title">${book.title}</h3>
                         <div class="book-details">
                             <p>著者：${book.author}</p>
                             <p>学部：${book.departmentName}</p>
+                            <p>教科：${book.subjectName}</p>
                             <p>状態：${book.conditionName}</p>
-                            <p>希望：${book.wishlist}</p>
                         </div>
+                        <div class="book-price">¥${book.price.toLocaleString()}</div>
                         <button class="btn" onclick="sendMessage(${book.id})">
                             メッセージを送る
                         </button>
                     </div>
                 </div>
-            `;
+            `).join('');
         }
 
-        // 検索とフィルタリング
-        function filterBooks() {
-            const searchText = document.getElementById('searchInput').value.toLowerCase();
-            const department = document.getElementById('departmentFilter').value;
-            const condition = document.getElementById('conditionFilter').value;
-
-            const filteredBooks = books.filter(book => {
-                const matchesSearch = 
-                    book.title.toLowerCase().includes(searchText) || 
-                    book.author.toLowerCase().includes(searchText);
-                const matchesDepartment = !department || book.department === department;
-                const matchesCondition = !condition || book.condition === condition;
-
-                return matchesSearch && matchesDepartment && matchesCondition;
-            });
-
-            displayBooks(filteredBooks);
-        }
-
-        // 教科書一覧の表示
-        function displayBooks(booksToShow) {
-            const grid = document.getElementById('booksGrid');
-            if (booksToShow.length === 0) {
-                grid.innerHTML = '<div class="no-results">該当する教科書が見つかりません</div>';
-                return;
-            }
-
-            grid.innerHTML = booksToShow.map(book => createBookCard(book)).join('');
-        }
-
-        // メッセージ送信画面への遷移
+        // メッセージページへ遷移
         function sendMessage(bookId) {
-            const book = books.find(b => b.id === bookId);
             window.location.href = `message.html?book=${bookId}`;
         }
 
         // イベントリスナーの設定
-        document.getElementById('searchInput').addEventListener('input', filterBooks);
-        document.getElementById('departmentFilter').addEventListener('change', filterBooks);
-        document.getElementById('conditionFilter').addEventListener('change', filterBooks);
+        document.addEventListener('DOMContentLoaded', () => {
+            setupFilterOptions();
+            updateBooksList();
 
-        // 初期表示
-        displayBooks(books);
+            // 検索・フィルター変更時のイベント
+            document.getElementById('searchInput').addEventListener('input', updateBooksList);
+            document.getElementById('departmentFilter').addEventListener('change', updateBooksList);
+            document.getElementById('subjectFilter').addEventListener('change', updateBooksList);
+            document.getElementById('conditionFilter').addEventListener('change', updateBooksList);
+            document.getElementById('sortSelect').addEventListener('change', updateBooksList);
+        });
     </script>
 </body>
 </html>
