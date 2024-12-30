@@ -63,17 +63,46 @@
             border-bottom: 1px solid #e5e7eb;
         }
 
-        .avatar {
+        .avatar-container {
+            position: relative;
             width: 100px;
             height: 100px;
+            margin: 0 auto 1rem;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
             background: #e5e7eb;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
             font-size: 2.5rem;
             color: #4b5563;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-edit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #2563eb;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
         }
 
         .profile-info {
@@ -127,51 +156,48 @@
             border-bottom: 1px solid #e5e7eb;
         }
 
-        .books-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.5rem;
+        .form-group {
+            margin-bottom: 1.5rem;
         }
 
-        .book-card {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .book-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            background: #f3f4f6;
-        }
-
-        .book-info {
-            padding: 1rem;
-        }
-
-        .book-title {
-            font-weight: bold;
+        .form-label {
+            display: block;
             margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4b5563;
         }
 
-        .book-details {
-            color: #6b7280;
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        .error-message {
+            color: #dc2626;
             font-size: 0.875rem;
-            margin-bottom: 1rem;
+            margin-top: 0.25rem;
         }
 
         .btn {
             display: inline-block;
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.5rem;
             background: #2563eb;
             color: white;
-            text-decoration: none;
+            border: none;
             border-radius: 4px;
             font-size: 0.875rem;
-            transition: background-color 0.3s;
-            border: none;
             cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
         }
 
         .btn:hover {
@@ -188,39 +214,18 @@
             background: #f3f4f6;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
+        .btn-danger {
+            background: #dc2626;
         }
 
-        .exchange-history {
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .horizontal-buttons {
+            display: flex;
+            gap: 1rem;
             margin-top: 2rem;
-        }
-
-        .history-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-
-        .history-book-info {
-            flex: 1;
-        }
-
-        .history-status {
-            font-size: 0.875rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            background: #dbeafe;
-            color: #2563eb;
-        }
-
-        .status-complete {
-            background: #dcfce7;
-            color: #16a34a;
         }
 
         @media (max-width: 768px) {
@@ -230,6 +235,7 @@
         }
     </style>
     <script src="auth.js"></script>
+    <script src="profile.js"></script>
 </head>
 <body>
     <header class="header">
@@ -242,122 +248,128 @@
     <div class="container">
         <aside class="sidebar">
             <div class="profile">
-                <div class="avatar">山</div>
-                <div class="profile-info">
-                    <div class="profile-name">山田太郎</div>
-                    <div class="profile-university">東京大学</div>
+                <div class="avatar-container">
+                    <div class="avatar" id="userAvatar">
+                        <!-- アバター画像はJavaScriptで動的に設定 -->
+                    </div>
+                    <div class="avatar-edit" onclick="document.getElementById('avatarInput').click()">
+                        📷
+                    </div>
+                    <input 
+                        type="file" 
+                        id="avatarInput" 
+                        accept="image/*" 
+                        style="display: none"
+                        onchange="handleAvatarChange(event)">
                 </div>
-                <button class="btn btn-outline" onclick="editProfile()">プロフィール編集</button>
+                <div class="profile-info">
+                    <div class="profile-name" id="userName"></div>
+                    <div class="profile-university" id="userUniversity"></div>
+                </div>
             </div>
             <nav>
                 <ul class="nav-menu">
                     <li class="nav-item">
-                        <a href="#books" class="nav-link active" onclick="showSection('books')">登録した教科書</a>
+                        <a href="#profile" class="nav-link active" onclick="showSection('profile')">プロフィール編集</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#history" class="nav-link" onclick="showSection('history')">交換履歴</a>
+                        <a href="#password" class="nav-link" onclick="showSection('password')">パスワード変更</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#settings" class="nav-link" onclick="showSection('settings')">設定</a>
+                        <a href="#notifications" class="nav-link" onclick="showSection('notifications')">通知設定</a>
                     </li>
                 </ul>
             </nav>
         </aside>
 
         <main class="main-content">
-            <div id="booksSection">
-                <h2 class="section-title">登録した教科書</h2>
-                <div class="books-grid" id="booksGrid">
-                    <!-- 教科書リストは動的に生成 -->
-                </div>
+            <div id="profileSection">
+                <h2 class="section-title">プロフィール編集</h2>
+                <form id="profileForm" onsubmit="return updateProfile(event)">
+                    <div class="form-group">
+                        <label class="form-label">名前</label>
+                        <input type="text" class="form-input" id="nameInput" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">メールアドレス</label>
+                        <input type="email" class="form-input" id="emailInput" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">大学</label>
+                        <input type="text" class="form-input" id="universityInput" required>
+                    </div>
+                    <button type="submit" class="btn">保存する</button>
+                </form>
             </div>
 
-            <div id="historySection" style="display: none;">
-                <h2 class="section-title">交換履歴</h2>
-                <div id="exchangeHistory">
-                    <!-- 交換履歴は動的に生成 -->
-                </div>
+            <div id="passwordSection" style="display: none;">
+                <h2 class="section-title">パスワード変更</h2>
+                <form id="passwordForm" onsubmit="return changePassword(event)">
+                    <div class="form-group">
+                        <label class="form-label">現在のパスワード</label>
+                        <input type="password" class="form-input" id="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">新しいパスワード</label>
+                        <input type="password" class="form-input" id="newPassword" required>
+                        <div class="error-message">8文字以上で、英数字を含めてください</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">新しいパスワード（確認）</label>
+                        <input type="password" class="form-input" id="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn">変更する</button>
+                </form>
             </div>
 
-            <div id="settingsSection" style="display: none;">
-                <h2 class="section-title">設定</h2>
-                <!-- 設定項目は後ほど実装 -->
+            <div id="notificationsSection" style="display: none;">
+                <h2 class="section-title">通知設定</h2>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="messageNotification" checked>
+                        メッセージ受信時の通知
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="exchangeNotification" checked>
+                        交換リクエスト時の通知
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="statusNotification" checked>
+                        交換状態変更時の通知
+                    </label>
+                </div>
+                <button onclick="saveNotificationSettings()" class="btn">設定を保存</button>
             </div>
         </main>
     </div>
 
     <script>
-        // サンプルデータ
-        const myBooks = [
-            {
-                id: 1,
-                title: '経済学入門 第3版',
-                department: '経済学部',
-                condition: '良好',
-                image: '/api/placeholder/200/150'
-            },
-            {
-                id: 2,
-                title: '線形代数学',
-                department: '理学部',
-                condition: '新品同様',
-                image: '/api/placeholder/200/150'
+        // 現在のユーザー情報を表示
+        function displayUserInfo() {
+            const user = auth.getCurrentUser();
+            if (user) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userUniversity').textContent = user.university;
+                document.getElementById('nameInput').value = user.name;
+                document.getElementById('emailInput').value = user.email;
+                document.getElementById('universityInput').value = user.university;
+                
+                // アバター表示
+                const avatarContainer = document.getElementById('userAvatar');
+                if (user.avatar) {
+                    if (user.avatar.startsWith('data:image')) {
+                        avatarContainer.innerHTML = `<img src="${user.avatar}" alt="${user.name}">`;
+                    } else {
+                        avatarContainer.textContent = user.avatar;
+                    }
+                } else {
+                    avatarContainer.textContent = profile.defaultAvatar;
+                }
             }
-        ];
-
-        const exchangeHistory = [
-            {
-                id: 1,
-                book: '経済学入門 第3版',
-                with: '田中花子',
-                date: '2024/03/20',
-                status: '完了',
-                statusClass: 'status-complete'
-            },
-            {
-                id: 2,
-                book: '微分積分学',
-                with: '鈴木一郎',
-                date: '2024/03/15',
-                status: '進行中',
-                statusClass: ''
-            }
-        ];
-
-        // 教科書カードの生成
-        function createBookCard(book) {
-            return `
-                <div class="book-card">
-                    <img src="${book.image}" alt="${book.title}" class="book-image">
-                    <div class="book-info">
-                        <h3 class="book-title">${book.title}</h3>
-                        <div class="book-details">
-                            <p>学部：${book.department}</p>
-                            <p>状態：${book.condition}</p>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-outline" onclick="editBook(${book.id})">編集</button>
-                            <button class="btn" onclick="deleteBook(${book.id})">削除</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // 交換履歴項目の生成
-        function createHistoryItem(history) {
-            return `
-                <div class="history-item">
-                    <div class="history-book-info">
-                        <div class="book-title">${history.book}</div>
-                        <div class="book-details">
-                            交換相手：${history.with}<br>
-                            日付：${history.date}
-                        </div>
-                    </div>
-                    <div class="history-status ${history.statusClass}">${history.status}</div>
-                </div>
-            `;
         }
 
         // セクションの表示切り替え
@@ -371,51 +383,93 @@
 
             document.getElementById(sectionId + 'Section').style.display = 'block';
             document.querySelector(`[href="#${sectionId}"]`).classList.add('active');
+        }
 
-            if (sectionId === 'books') {
-                displayBooks();
-            } else if (sectionId === 'history') {
-                displayHistory();
+        // プロフィール更新
+        async function updateProfile(event) {
+            event.preventDefault();
+            try {
+                const result = await profile.updateProfile({
+                    name: document.getElementById('nameInput').value,
+                    email: document.getElementById('emailInput').value,
+                    university: document.getElementById('universityInput').value
+                });
+
+                if (result) {
+                    alert('プロフィールを更新しました');
+                    displayUserInfo();
+                }
+            } catch (error) {
+                alert(error.message);
+            }
+            return false;
+        }
+
+        // パスワード変更
+        async function changePassword(event) {
+            event.preventDefault();
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            try {
+                const result = await profile.changePassword(
+                    currentPassword,
+                    newPassword,
+                    confirmPassword
+                );
+
+                if (result) {
+                    alert('パスワードを変更しました');
+                    event.target.reset();
+                }
+            } catch (error) {
+                alert(error.message);
+            }
+            return false;
+        }
+
+        // アバター画像変更
+        async function handleAvatarChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                try {
+                    const result = await profile.uploadAvatar(file);
+                    displayUserInfo();
+                } catch (error) {
+                    alert(error.message);
+                }
             }
         }
 
-        // 教科書一覧の表示
-        function displayBooks() {
-            const grid = document.getElementById('booksGrid');
-            grid.innerHTML = myBooks.map(book => createBookCard(book)).join('');
+        // 通知設定の保存
+        function saveNotificationSettings() {
+            const settings = {
+                messageNotification: document.getElementById('messageNotification').checked,
+                exchangeNotification: document.getElementById('exchangeNotification').checked,
+                statusNotification: document.getElementById('statusNotification').checked
+            };
+
+            // 実際のAPIでは設定を保存
+            localStorage.setItem('notificationSettings', JSON.stringify(settings));
+            alert('通知設定を保存しました');
         }
 
-        // 交換履歴の表示
-        function displayHistory() {
-            const history = document.getElementById('exchangeHistory');
-            history.innerHTML = exchangeHistory.map(item => createHistoryItem(item)).join('');
-        }
+        // 認証チェックと初期表示
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.requireAuth();
+            displayUserInfo();
 
-        // 教科書の編集（モック）
-        function editBook(bookId) {
-            alert(`教科書ID: ${bookId} の編集機能は現在開発中です。`);
-        }
-
-        // 教科書の削除（モック）
-        function deleteBook(bookId) {
-            if (confirm('この教科書を削除してもよろしいですか？')) {
-                alert(`教科書ID: ${bookId} の削除機能は現在開発中です。`);
+            // 通知設定の読み
+// 通知設定の読み込み
+            const savedSettings = localStorage.getItem('notificationSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                document.getElementById('messageNotification').checked = settings.messageNotification;
+                document.getElementById('exchangeNotification').checked = settings.exchangeNotification;
+                document.getElementById('statusNotification').checked = settings.statusNotification;
             }
-        }
-
-        // プロフィール編集（モック）
-        function editProfile() {
-            alert('プロフィール編集機能は現在開発中です。');
-        }
-
-        // 初期表示
-        displayBooks();
+        });
     </script>
-    <script>
-    // ページ読み込み時に認証チェック
-    document.addEventListener('DOMContentLoaded', () => {
-        auth.requireAuth();
-    });
-</script>
 </body>
 </html>
